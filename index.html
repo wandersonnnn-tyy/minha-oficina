@@ -434,10 +434,25 @@ body { margin: 0; background: #18181B; }
             </div>
             <span style="font-size: 14px">{{h.cliente}} · {{h.moto}}</span>
             <span style="font-size: 12px; color: #A1A1AA">{{h.telTxt}}</span>
-            <sc-if value="{{h.naoEditando}}" hint-placeholder-val="{{ true }}">
-              <button type="button" onClick="{{h.editar}}" style="align-self: flex-start; display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-size: 12px; font-weight: 500">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg>Editar cliente
-              </button>
+            <sc-if value="{{h.mostraAcoes}}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; gap: 8px">
+                <button type="button" onClick="{{h.editar}}" style="display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-size: 12px; font-weight: 500">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg>Editar cliente
+                </button>
+                <button type="button" onClick="{{h.pedirApagar}}" style="display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid #7F1D1D; background: transparent; color: #F87171; font-size: 12px; font-weight: 500">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>Apagar
+                </button>
+              </div>
+            </sc-if>
+            <sc-if value="{{h.apagando}}" hint-placeholder-val="{{ false }}">
+              <div role="alertdialog" aria-label="Confirmar exclusão" style="display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #2A1414; border: 1.5px solid #EF4444; border-radius: 12px">
+                <span style="font-weight: 600; font-size: 14px">Apagar a OS {{h.num}}?</span>
+                <span style="font-size: 12px; color: #FCA5A5">O orçamento de {{h.cliente}} ({{h.moto}}) some do app e não dá para recuperar.</span>
+                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+                  <button type="button" onClick="{{h.cancelarApagar}}" style="height: 44px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-weight: 500">Cancelar</button>
+                  <button type="button" onClick="{{h.apagar}}" style="height: 44px; border-radius: 10px; border: 0; background: #EF4444; color: #FFFFFF; font-weight: 700">Apagar</button>
+                </div>
+              </div>
             </sc-if>
             <sc-if value="{{h.editando}}" hint-placeholder-val="{{ false }}">
               <div style="display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #18181B; border: 1.5px solid #FFC107; border-radius: 12px">
@@ -1248,6 +1263,10 @@ class Component extends DCLogic {
         advance: () => this.advance(h.id),
         telTxt: h.tel && String(h.tel).trim() ? 'WhatsApp: ' + h.tel : 'Sem WhatsApp cadastrado',
         editando: s.editOs === h.id, naoEditando: s.editOs !== h.id,
+        apagando: s.delOs === h.id, mostraAcoes: s.editOs !== h.id && s.delOs !== h.id,
+        pedirApagar: () => this.setState({ delOs: h.id, editOs: null }),
+        cancelarApagar: () => this.setState({ delOs: null }),
+        apagar: () => this.setState({ history: this.state.history.filter((x) => x.id !== h.id), delOs: null, flash: 'OS ' + h.num + ' apagada.' }),
         editar: () => this.setState({ editOs: h.id, edCli: { cliente: h.cliente === 'Cliente sem nome' ? '' : h.cliente, tel: h.tel || '', placa: h.placa === 'SEM PLACA' ? '' : h.placa } }),
         avisar: () => this.openWa(h.tel, 'Olá' + (h.cliente && h.cliente.charAt(0) !== '[' && h.cliente !== 'Cliente sem nome' ? ', ' + h.cliente.split(/\s+/)[0] : '') + '! Sua ' + h.moto + ' está pronta para retirada' + (s.shop.nome.trim() ? ' na ' + s.shop.nome.trim() : '') + '. Total: ' + this.brl(h.total) + '. Qualquer dúvida, é só chamar.')
       })),
