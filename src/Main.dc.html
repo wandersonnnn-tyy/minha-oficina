@@ -1,0 +1,1255 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Minha Oficina</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#18181B}
+a{color:#FFC107}a:hover{color:#FFD54F}
+button{font:inherit;cursor:pointer}
+input{font:inherit}
+input::placeholder{color:#8A8A8A}
+input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outline:2px solid #FFC107;outline-offset:2px}
+@keyframes dicaBrilho{0%,100%{box-shadow:0 0 0 0 rgba(255,193,7,0)}50%{box-shadow:0 0 0 2px rgba(255,193,7,0.35)}}
+@keyframes dicaSeta{0%,100%{transform:translateY(-1px);opacity:0.6}50%{transform:translateY(3px);opacity:1}}
+.dica-brilho{animation:dicaBrilho 2.4s ease-in-out infinite}
+.dica-seta{animation:dicaSeta 1.6s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.dica-brilho,.dica-seta{animation:none}}
+</style>
+</helmet>
+<div style="width: 368px; height: 776px; box-sizing: border-box; display: flex; flex-direction: column; background: #18181B; color: #FFFFFF; font-family: 'Poppins', system-ui, sans-serif; font-size: 14px; overflow: hidden; position: absolute; left: 3px; top: 63px">
+
+  <!-- CABEÇALHO DO INÍCIO -->
+  <sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
+    <header style="flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 18px 16px 8px">
+      <div style="width: 40px; height: 40px; border-radius: 50%; background: #3F3F46; border: 1px solid #FFC107; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0">{{mecIniciais}}</div>
+      <div style="display: flex; flex-direction: column; flex: 1; min-width: 0">
+        <span style="font-size: 12px; color: #A1A1AA">{{saudacaoHora}}</span>
+        <span style="font-weight: 600; font-size: 16px">{{tarefasTxt}}</span>
+      </div>
+      <sc-if value="{{hasLowStock}}" hint-placeholder-val="{{ true }}">
+        <button type="button" onClick="{{navStockBaixo}}" style="display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 17px; border: 0; background: #3B1414; color: #F87171; font-size: 12px; font-weight: 600; flex-shrink: 0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"></path></svg>{{lowCount}} repor
+        </button>
+      </sc-if>
+    </header>
+  </sc-if>
+
+  <!-- CABEÇALHO DAS OUTRAS TELAS -->
+  <sc-if value="{{notHome}}" hint-placeholder-val="{{ false }}">
+    <header style="flex-shrink: 0; display: flex; align-items: center; gap: 6px; padding: 14px 16px 10px">
+      <sc-if value="{{showBack}}" hint-placeholder-val="{{ true }}">
+        <button type="button" onClick="{{goBack}}" aria-label="Voltar" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; color: #FFFFFF; margin-left: -10px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+        </button>
+      </sc-if>
+      <div style="display: flex; flex-direction: column; flex: 1; min-width: 0">
+        <span style="font-weight: 600; font-size: 20px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{headerTitle}}</span>
+        <span style="font-size: 12px; color: #A1A1AA; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{headerSub}}</span>
+      </div>
+      <sc-if value="{{isStock}}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{bellStock}}" aria-label="{{bellLabel}}" style="position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: #27272A; border: 1px solid #3F3F46; border-radius: 50%; color: #FFFFFF">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg>
+          <sc-if value="{{hasLowStock}}" hint-placeholder-val="{{ true }}">
+            <span style="position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px; padding: 0 4px; box-sizing: border-box; border-radius: 9px; background: #EF4444; color: #FFFFFF; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center">{{lowCount}}</span>
+          </sc-if>
+        </button>
+        <div style="width: 40px; height: 40px; margin-left: 6px; border-radius: 50%; background: #3F3F46; border: 1px solid #FFC107; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0">{{mecIniciais}}</div>
+      </sc-if>
+    </header>
+  </sc-if>
+
+  <sc-if value="{{inFlow}}" hint-placeholder-val="{{ false }}">
+    <ol aria-label="Passos do orçamento" style="flex-shrink: 0; display: flex; gap: 6px; margin: 0; padding: 0 16px 12px; list-style: none">
+      <sc-for list="{{steps}}" as="st" hint-placeholder-count="4">
+        <li style="flex: 1; display: flex; flex-direction: column; gap: 5px">
+          <span style="{{st.bar}}"></span>
+          <span style="{{st.labelStyle}}">{{st.label}}</span>
+        </li>
+      </sc-for>
+    </ol>
+  </sc-if>
+
+  <main style="flex: 1; overflow-y: auto; padding: 6px 16px 24px; position: relative">
+
+    <sc-if value="{{hasFlash}}" hint-placeholder-val="{{ false }}">
+      <div role="status" style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; margin-bottom: 14px; background: #0F2E1C; border: 1px solid #22C55E; border-radius: 12px; font-size: 13px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 12l5 5 9-10"></path></svg>
+        <span>{{flash}}</span>
+      </div>
+    </sc-if>
+
+    <!-- INÍCIO: próximo passo -->
+    <sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-direction: column; gap: 16px; min-height: 100%">
+        <section style="display: flex; flex-direction: column; gap: 12px; padding: 18px; background: #27272A; border: 1.5px solid #FFC107; border-radius: 20px">
+          <span style="align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; padding: 4px 10px; border-radius: 10px; background: #FFC107; color: #18181B">PRÓXIMO PASSO</span>
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <span style="font-weight: 600; font-size: 20px; line-height: 1.25">{{proximo.titulo}}</span>
+            <span style="font-size: 13px; color: #A1A1AA">{{proximo.sub}}</span>
+          </div>
+          <sc-if value="{{proximo.temAcao}}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{proximo.acao}}" class="dica-brilho" style="{{proximo.estilo}}">
+              <sc-if value="{{proximo.wa}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8.5 8.5 0 1 1 8 19z"></path><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-1.9-1-1 .8a4 4 0 0 1-2.2-2.2l.8-1-1-1.9z"></path></svg></sc-if>
+              {{proximo.rotulo}}
+            </button>
+          </sc-if>
+        </section>
+
+        <sc-if value="{{temDepois}}" hint-placeholder-val="{{ true }}">
+          <section style="display: flex; flex-direction: column">
+            <h2 style="margin: 0 0 10px; font-weight: 600; font-size: 15px">Depois</h2>
+            <sc-for list="{{depois}}" as="t" hint-placeholder-count="3">
+              <div style="display: flex; gap: 14px">
+                <div style="display: flex; flex-direction: column; align-items: center; width: 22px; flex-shrink: 0">
+                  <span style="{{t.dot}}"></span>
+                  <sc-if value="{{t.linha}}" hint-placeholder-val="{{ true }}"><span style="flex: 1; width: 2px; background: #3F3F46"></span></sc-if>
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 6px; padding-bottom: 16px; min-width: 0">
+                  <span style="font-weight: 500">{{t.titulo}}</span>
+                  <span style="font-size: 12px; color: #A1A1AA">{{t.sub}}</span>
+                  <button type="button" onClick="{{t.acao}}" style="align-self: flex-start; height: 38px; padding: 0 14px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-size: 12px; font-weight: 500">{{t.rotulo}}</button>
+                </div>
+              </div>
+            </sc-for>
+          </section>
+        </sc-if>
+
+        <button type="button" onClick="{{novoOrc}}" style="margin-top: auto; flex-shrink: 0; height: 60px; border-radius: 16px; border: 0; background: #FFC107; color: #18181B; font-weight: 700; font-size: 17px; display: flex; align-items: center; justify-content: center; gap: 10px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Novo orçamento
+        </button>
+      </div>
+    </sc-if>
+
+    <!-- ESCOLHER MOTO -->
+    <sc-if value="{{isBrand}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <p style="margin: 0; color: #CFCFCF">Qual a marca da moto?</p>
+        <sc-for list="{{brands}}" as="b" hint-placeholder-count="2">
+          <button type="button" onClick="{{b.pick}}" style="display: flex; align-items: center; gap: 16px; min-height: 116px; padding: 20px; background: #27272A; border: 1px solid #3F3F46; border-radius: 16px; color: #FFFFFF; text-align: left">
+            <img src="{{b.logo}}" alt="" style="width: 72px; height: 72px; object-fit: contain; flex-shrink: 0; display: block">
+            <span style="display: flex; flex-direction: column; flex: 1; min-width: 0">
+              <span style="font-weight: 700; font-size: 28px; line-height: 1.1; letter-spacing: 0.04em; text-transform: uppercase">{{b.name}}</span>
+              <span style="font-size: 13px; color: #A1A1AA">{{b.count}} modelos</span>
+            </span>
+            <span style="width: 44px; height: 44px; border-radius: 50%; background: #FFC107; color: #27272A; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+            </span>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- MODELOS DA MARCA -->
+    <sc-if value="{{isModels}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <sc-for list="{{models}}" as="m" hint-placeholder-count="10">
+          <div style="{{m.cardStyle}}">
+            <button type="button" onClick="{{m.pick}}" aria-expanded="{{m.expanded}}" style="width: 100%; display: flex; align-items: center; gap: 14px; padding: 12px; background: transparent; border: 0; color: #FFFFFF; text-align: left">
+              <span style="width: 76px; height: 56px; border-radius: 10px; background: #3F3F46; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0 4px; box-sizing: border-box; color: #FFC107; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; text-align: center; line-height: 1.1">{{m.apelido}}</span>
+              <span style="display: flex; flex-direction: column; flex: 1; min-width: 0">
+                <span style="font-weight: 600; font-size: 15px">{{m.name}}</span>
+                <span style="font-size: 12px; color: #A1A1AA">{{m.kind}} · {{m.faixa}}{{m.anosTxt}}</span>
+              </span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="{{m.chevStyle}}"><path d="M9 6l6 6-6 6"></path></svg>
+            </button>
+            <sc-if value="{{m.open}}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 8px; padding: 0 12px 14px">
+                <span style="font-size: 12px; color: #A1A1AA">Qual o ano da moto?</span>
+                <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px">
+                  <sc-for list="{{m.anos}}" as="a" hint-placeholder-count="11">
+                    <button type="button" onClick="{{a.pick}}" style="height: 44px; border-radius: 10px; border: 1px solid #52525B; background: #18181B; color: #FFFFFF; font-weight: 600; font-size: 14px">{{a.ano}}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- REVISÃO -->
+    <sc-if value="{{isDetail}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; background: #27272A; border-radius: 12px">
+          <label for="nomeModelo" style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #A1A1AA">{{brandName}} · nome do modelo{{anoTxt}}</label>
+          <input id="nomeModelo" type="text" value="{{modelBase}}" onChange="{{setModelName}}" style="width: 100%; box-sizing: border-box; height: 46px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; font-weight: 600; font-size: 18px">
+          <span style="font-size: 12px; color: #A1A1AA">{{faixaInfo}}</span>
+        </div>
+
+        <div class="dica-brilho" style="height: 48px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 8px; background: #27272A; border-radius: 24px; color: #FFFFFF; font-weight: 600; font-size: 15px; letter-spacing: 0.04em">Revisão<svg class="dica-seta" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></div>
+        <div role="tablist" aria-label="Tipo de revisão" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 4px; background: #27272A; border-radius: 24px">
+          <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+            <button type="button" role="tab" aria-selected="{{t.selected}}" class="{{t.cls}}" onClick="{{t.pick}}" style="{{t.style}}">{{t.label}}</button>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{isEspecifico}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; background: #27272A; border-radius: 12px">
+            <span style="font-size: 13px; color: #A1A1AA">Toque para adicionar um serviço, ou use "Adicionar item ou peça" para um que não está na lista.</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px">
+              <sc-for list="{{sugestoes}}" as="sg" hint-placeholder-count="6">
+                <button type="button" onClick="{{sg.add}}" style="height: 38px; padding: 0 12px; border-radius: 19px; border: 1px solid #52525B; background: #18181B; color: #FFFFFF; font-size: 12px">+ {{sg.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <sc-for list="{{items}}" as="it" hint-placeholder-count="6">
+            <div style="{{it.cardStyle}}">
+              <div style="display: flex; align-items: center; gap: 6px">
+                <input type="checkbox" id="{{it.cid}}" checked="{{it.on}}" onChange="{{it.toggle}}" aria-label="Incluir item no orçamento" style="width: 22px; height: 22px; accent-color: #FFC107; flex-shrink: 0; margin: 0 4px 0 0">
+                <input type="text" value="{{it.name}}" onChange="{{it.setName}}" aria-label="Nome do item" style="flex: 1; min-width: 0; height: 40px; padding: 0 6px; background: transparent; border: 1px solid transparent; border-radius: 8px; color: #FFFFFF; font-size: 14px; font-weight: 500">
+                <button type="button" onClick="{{it.remove}}" aria-label="Remover item" style="width: 40px; height: 40px; flex-shrink: 0; background: transparent; border: 0; color: #A1A1AA; display: flex; align-items: center; justify-content: center; border-radius: 8px">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+                </button>
+              </div>
+              <sc-if value="{{it.hasStockTag}}" hint-placeholder-val="{{ false }}">
+                <span style="{{it.stockStyle}}">{{it.stockTag}}</span>
+              </sc-if>
+              <div style="display: flex; align-items: center; gap: 8px; padding-left: 32px">
+                <label style="display: flex; align-items: center; gap: 4px; height: 38px; padding: 0 8px; background: #3F3F46; border-radius: 8px; font-size: 11px; color: #A1A1AA">
+                  Peça R$
+                  <input type="text" inputMode="decimal" value="{{it.part}}" onChange="{{it.setPart}}" style="width: 44px; background: transparent; border: 0; color: #FFFFFF; font-size: 14px; font-weight: 600; text-align: right; padding: 0">
+                </label>
+                <label style="display: flex; align-items: center; gap: 4px; height: 38px; padding: 0 8px; background: #3F3F46; border-radius: 8px; font-size: 11px; color: #A1A1AA">
+                  M.O. R$
+                  <input type="text" inputMode="decimal" value="{{it.labor}}" onChange="{{it.setLabor}}" style="width: 44px; background: transparent; border: 0; color: #FFFFFF; font-size: 14px; font-weight: 600; text-align: right; padding: 0">
+                </label>
+                <span style="flex: 1; text-align: right; font-weight: 600; font-size: 14px; white-space: nowrap">{{it.subFmt}}</span>
+              </div>
+            </div>
+          </sc-for>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 6px 4px 0">
+            <span style="font-size: 12px; color: #A1A1AA">{{countLabel}}</span>
+            <span style="font-weight: 700; font-size: 22px">{{subFmt}}</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+            <button type="button" onClick="{{addItem}}" style="display: flex; align-items: center; justify-content: center; gap: 6px; height: 52px; padding: 0 8px; background: transparent; border: 1.5px solid #FFC107; border-radius: 12px; color: #FFC107; font-weight: 600; font-size: 14px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+              Adicionar peça
+            </button>
+            <button type="button" onClick="{{toQuote}}" style="display: flex; align-items: center; justify-content: center; gap: 6px; height: 52px; padding: 0 8px; background: #FFC107; border: 0; border-radius: 12px; color: #18181B; font-weight: 700; font-size: 14px">
+              Gerar orçamento
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ORÇAMENTO -->
+    <sc-if value="{{isQuote}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <section style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #27272A; border-radius: 12px">
+          <h2 style="margin: 0; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A1A1AA; font-weight: 500">Cliente</h2>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+            <div style="display: flex; flex-direction: column; gap: 4px; grid-column: span 2">
+              <label for="cliente" style="font-size: 12px; color: #A1A1AA">Nome</label>
+              <input id="cliente" type="text" placeholder="Nome do cliente" value="{{q.cliente}}" onChange="{{setCliente}}" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px; grid-column: span 2">
+              <label for="telCliente" style="font-size: 12px; color: #A1A1AA">WhatsApp do cliente</label>
+              <input id="telCliente" type="tel" inputMode="tel" placeholder="(00) 00000-0000" value="{{q.tel}}" onChange="{{setTelCliente}}" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <label for="placa" style="font-size: 12px; color: #A1A1AA">Placa</label>
+              <input id="placa" type="text" placeholder="ABC1D23" value="{{q.placa}}" onChange="{{setPlaca}}" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; text-transform: uppercase; min-width: 0">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <label for="kmAtual" style="font-size: 12px; color: #A1A1AA">Km atual</label>
+              <input id="kmAtual" type="text" inputMode="numeric" placeholder="0" value="{{q.km}}" onChange="{{setKmAtual}}" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
+            </div>
+          </div>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #27272A; border-radius: 12px">
+          <h2 style="margin: 0; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A1A1AA; font-weight: 500">Pagamento</h2>
+          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px">
+            <sc-for list="{{pays}}" as="p" hint-placeholder-count="4">
+              <button type="button" onClick="{{p.pick}}" aria-pressed="{{p.selected}}" aria-label="{{p.label}}" class="dica-brilho" style="{{p.style}}">
+                <sc-if value="{{p.isPix}}" hint-placeholder-val="{{ false }}"><img src="/_blob/fdefb710a0cf083fb10634d1dbc74080" alt="" style="width: 100%; height: 34px; object-fit: contain; display: block"></sc-if>
+                <sc-if value="{{p.notPix}}" hint-placeholder-val="{{ true }}">{{p.label}}</sc-if>
+              </button>
+            </sc-for>
+          </div>
+          <sc-if value="{{isCredito}}" hint-placeholder-val="{{ false }}">
+            <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px">
+              <sc-for list="{{parcelas}}" as="pc" hint-placeholder-count="6">
+                <button type="button" onClick="{{pc.pick}}" aria-pressed="{{pc.selected}}" style="{{pc.style}}">{{pc.label}}</button>
+              </sc-for>
+            </div>
+          </sc-if>
+          </section></div>
+        
+
+        <div style="display: flex; flex-direction: column; background: #FFFFFF; color: #27272A; border-radius: 12px; padding: 18px">
+          <div style="display: flex; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid #E5E5E5">
+            <sc-if value="{{hasLogo}}" hint-placeholder-val="{{ false }}"><img src="{{shopLogo}}" alt="Logo da oficina" style="width: 44px; height: 44px; object-fit: contain; flex-shrink: 0"></sc-if>
+            <sc-if value="{{noLogo}}" hint-placeholder-val="{{ true }}"><svg width="44" height="44" viewBox="0 0 132 132" aria-hidden="true" style="flex-shrink: 0"><path d="M66 6l52 30v60l-52 30-52-30V36z" fill="#FFC107"></path><circle cx="66" cy="66" r="38" fill="#27272A"></circle><g stroke="#FFC107" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M82 46a10 10 0 0 0-13 13L48 80l5 5 21-21a10 10 0 0 0 13-13l-6 6-6-1-1-6z"></path></g></svg></sc-if>
+            <div style="display: flex; flex-direction: column; min-width: 0">
+              <span style="font-weight: 600; font-size: 15px">{{shopNome}}</span>
+              <span style="font-size: 11px; color: #555555">{{shopLinha}}</span>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 12px 0 10px; border-bottom: 2px solid #27272A">
+            <span style="font-weight: 700; font-size: 17px; text-transform: uppercase; line-height: 1.2">{{brandName}} {{modelName}}</span>
+            <span style="font-size: 12px; font-weight: 500; color: #555555; white-space: nowrap">{{revLabel}}</span>
+          </div>
+          <sc-for list="{{chosen}}" as="c" hint-placeholder-count="5">
+            <div style="display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid #EEEEEE; font-size: 13px">
+              <span style="display: flex; flex-direction: column">
+                <span>{{c.name}}</span>
+                <span style="font-size: 11px; color: #666666">{{c.detail}}</span>
+              </span>
+              <span style="font-weight: 600; white-space: nowrap">{{c.totalFmt}}</span>
+            </div>
+          </sc-for>
+          <div style="display: flex; flex-direction: column; gap: 4px; padding-top: 12px; font-size: 13px; color: #444444">
+            <div style="display: flex; justify-content: space-between"><span>Peças</span><span>{{partsFmt}}</span></div>
+            <div style="display: flex; justify-content: space-between"><span>Mão de obra</span><span>{{laborFmt}}</span></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 10px">
+            <span style="font-weight: 600">Total</span>
+            <span style="font-weight: 700; font-size: 28px; line-height: 1">{{totalFmt}}</span>
+          </div>
+          <span style="font-size: 12px; color: #444444; text-align: right; padding-top: 4px">{{payLine}}</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <button type="button" onClick="{{saveQuote}}" style="height: 54px; background: #FFC107; border: 0; border-radius: 12px; color: #18181B; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>Finalizar orçamento</button>
+          <a href="Aprovacao.dc.html" style="height: 48px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1.5px solid #52525B; border-radius: 12px; color: #FFFFFF; font-weight: 500; text-decoration: none; font-size: 13px">Ver como o cliente vê</a>
+        </div>
+      </sc-if>
+
+    <!-- ORÇAMENTO PRONTO -->
+    <sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; align-items: center; gap: 14px">
+          <span style="width: 52px; height: 52px; border-radius: 50%; background: #FFC107; color: #18181B; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span>
+          <span style="display: flex; flex-direction: column">
+            <span style="font-weight: 700; font-size: 20px">Orçamento pronto!</span>
+            <span style="font-size: 13px; color: #A1A1AA">OS {{done.num}} · {{done.moto}}</span>
+          </span>
+        </div>
+
+        <div aria-label="Prévia do PDF" style="display: flex; flex-direction: column; background: #FFFFFF; color: #18181B; border-radius: 6px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.45)">
+          <div style="height: 8px; background: #FFC107"></div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding: 16px">
+            <div style="display: flex; align-items: center; gap: 10px">
+              <sc-if value="{{hasLogo}}" hint-placeholder-val="{{ false }}"><img src="{{shopLogo}}" alt="Logo da oficina" style="width: 40px; height: 40px; object-fit: contain; flex-shrink: 0"></sc-if>
+              <sc-if value="{{noLogo}}" hint-placeholder-val="{{ true }}"><svg width="40" height="40" viewBox="0 0 132 132" aria-hidden="true" style="flex-shrink: 0"><path d="M66 6l52 30v60l-52 30-52-30V36z" fill="#FFC107"></path><circle cx="66" cy="66" r="38" fill="#27272A"></circle><g stroke="#FFC107" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M82 46a10 10 0 0 0-13 13L48 80l5 5 21-21a10 10 0 0 0 13-13l-6 6-6-1-1-6z"></path></g></svg></sc-if>
+              <span style="display: flex; flex-direction: column; flex: 1; min-width: 0">
+                <span style="font-weight: 700; font-size: 13px">{{shopNome}}</span>
+                <span style="font-size: 10px; color: #52525B">{{shopLinha}}</span>
+              </span>
+              <span style="display: flex; flex-direction: column; align-items: flex-end">
+                <span style="font-weight: 700; font-size: 12px">ORÇAMENTO</span>
+                <span style="font-size: 10px; color: #52525B">Nº {{done.num}} · {{done.data}}</span>
+              </span>
+            </div>
+            <div style="display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-top: 1px solid #E4E4E7; border-bottom: 1px solid #E4E4E7; font-size: 11px">
+              <span>{{done.cliente}} · {{done.placa}}</span>
+              <span style="color: #52525B">{{done.rev}}</span>
+            </div>
+            <sc-for list="{{done.linhas}}" as="ln" hint-placeholder-count="4">
+              <div style="display: flex; justify-content: space-between; gap: 8px; font-size: 11px">
+                <span>{{ln.name}}</span><span style="font-weight: 600; white-space: nowrap">{{ln.totalFmt}}</span>
+              </div>
+            </sc-for>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; padding: 8px 10px; background: #18181B; color: #FFC107; border-radius: 4px">
+              <span style="font-weight: 700; font-size: 12px">TOTAL</span>
+              <span style="font-weight: 700; font-size: 15px">{{done.totalFmt}}</span>
+            </div>
+          </div>
+        </div>
+
+        <sc-if value="{{noLogo}}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{navSet}}" style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #27272A; border: 1px dashed #FFC107; border-radius: 12px; color: #FFFFFF; text-align: left; font-size: 13px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16v.5"></path></svg>
+            <span style="flex: 1">O PDF sai com o logo padrão. Envie o logo da sua oficina em Ajustes.</span>
+          </button>
+        </sc-if>
+
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <button type="button" onClick="{{baixarPdf}}" style="height: 56px; background: #FFC107; border: 0; border-radius: 14px; color: #18181B; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"></path><path d="M12 10v7M9 14l3 3 3-3"></path></svg>Baixar PDF
+          </button>
+          <sc-if value="{{hasPdfMsg}}" hint-placeholder-val="{{ false }}">
+            <span role="status" style="font-size: 12px; color: #A1A1AA; text-align: center">{{pdfMsg}}</span>
+          </sc-if>
+          <button type="button" onClick="{{enviarWaDone}}" style="height: 52px; background: #22C55E; border: 0; border-radius: 14px; color: #052E12; font-weight: 600; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 8px">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8.5 8.5 0 1 1 8 19z"></path><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-1.9-1-1 .8a4 4 0 0 1-2.2-2.2l.8-1-1-1.9z"></path></svg>Enviar no WhatsApp
+          </button>
+          <button type="button" onClick="{{navHome}}" style="height: 48px; background: transparent; border: 1.5px solid #52525B; border-radius: 14px; color: #FFFFFF; font-weight: 500">Voltar ao início</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ORDENS -->
+    <sc-if value="{{isOs}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <label style="display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; background: #27272A; border: 1px solid #3F3F46; border-radius: 12px; color: #A1A1AA">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+          <input type="search" aria-label="Buscar por placa ou cliente" placeholder="Buscar placa ou cliente..." value="{{busca}}" onChange="{{setBusca}}" style="flex: 1; min-width: 0; height: 44px; background: transparent; border: 0; color: #FFFFFF; outline: none">
+        </label>
+        <div style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px">
+          <sc-for list="{{osFilters}}" as="f" hint-placeholder-count="6">
+            <button type="button" onClick="{{f.pick}}" aria-pressed="{{f.selected}}" style="{{f.style}}">{{f.label}}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{osEmpty}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 36px 16px; text-align: center; color: #A1A1AA; background: #27272A; border-radius: 12px">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"></path><path d="M9 11h7M9 15h7M9 7h3"></path></svg>
+            <span style="font-weight: 600; color: #FFFFFF">Nenhuma ordem aqui</span>
+            <span style="font-size: 13px">Cada orçamento salvo vira uma OS.</span>
+          </div>
+        </sc-if>
+        <sc-for list="{{osList}}" as="h" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #27272A; border: 1px solid #3F3F46; border-radius: 12px">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+              <span style="display: flex; align-items: baseline; gap: 8px">
+                <span style="font-size: 12px; color: #A1A1AA">OS {{h.num}}</span>
+                <span style="font-weight: 600; font-size: 16px; letter-spacing: 0.06em">{{h.placa}}</span>
+              </span>
+              <span style="{{h.statusStyle}}">{{h.status}}</span>
+            </div>
+            <span style="font-size: 14px">{{h.cliente}} · {{h.moto}}</span>
+            <div style="display: flex; gap: 4px" aria-hidden="true">
+              <sc-for list="{{h.steps}}" as="st" hint-placeholder-count="5">
+                <span style="{{st.style}}"></span>
+              </sc-for>
+            </div>
+            <div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: #A1A1AA">
+              <span>{{h.rev}} · {{h.data}} · {{h.mecanico}}{{h.fotosTxt}}</span>
+              <span style="font-weight: 600; color: #FFFFFF; font-size: 14px; white-space: nowrap">{{h.totalFmt}}</span>
+            </div>
+            <sc-if value="{{h.canAdvance}}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; gap: 8px">
+                <sc-if value="{{h.hasNext}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{h.advance}}" style="flex: 1; height: 44px; background: #FFC107; border: 0; border-radius: 10px; color: #27272A; font-weight: 600; font-size: 14px">{{h.nextLabel}}</button></sc-if>
+                <sc-if value="{{h.isReady}}" hint-placeholder-val="{{ false }}">
+                  <button type="button" onClick="{{h.avisar}}" style="flex: 1; height: 44px; padding: 0 12px; background: transparent; border: 1.5px solid #22C55E; border-radius: 10px; color: #4ADE80; font-weight: 500; font-size: 13px">Avisar no WhatsApp</button>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- ESTOQUE -->
+    <sc-if value="{{isStock}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+          <div style="display: flex; flex-direction: column; gap: 4px; padding: 12px; background: #27272A; border: 1px solid #3F3F46; border-radius: 12px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"></path><path d="M3 8l9 5 9-5M12 13v8"></path></svg>
+            <span style="font-weight: 600; font-size: 20px; line-height: 1.1">{{stockUnits}}</span>
+            <span style="font-size: 11px; color: #A1A1AA; line-height: 1.3">Peças em estoque</span>
+          </div>
+          <button type="button" onClick="{{toggleLow}}" aria-pressed="{{lowPressed}}" style="{{lowCardStyle}}">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z" fill="#EF4444"></path><path d="M12 10v5M12 18v.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"></path></svg>
+            <span style="font-weight: 600; font-size: 20px; line-height: 1.1">{{lowCount}}</span>
+            <span style="font-size: 11px; color: #CFCFCF; line-height: 1.3">Abaixo do mínimo</span>
+          </button>
+          <div style="display: flex; flex-direction: column; gap: 4px; padding: 12px; background: #27272A; border: 1px solid #3F3F46; border-radius: 12px; min-width: 0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"></rect><circle cx="12" cy="12" r="2.5"></circle></svg>
+            <span style="font-weight: 600; font-size: 15px; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{stockValueFmt}}</span>
+            <span style="font-size: 11px; color: #A1A1AA; line-height: 1.3">Valor em estoque</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px">
+          <label style="flex: 1; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; background: #27272A; border: 1px solid #3F3F46; border-radius: 12px; color: #A1A1AA; min-width: 0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+            <input type="search" aria-label="Buscar peça" placeholder="Buscar peça pelo nome..." value="{{stockBusca}}" onChange="{{setStockBusca}}" style="flex: 1; min-width: 0; height: 44px; background: transparent; border: 0; color: #FFFFFF; outline: none">
+          </label>
+          <button type="button" onClick="{{addStock}}" aria-label="Cadastrar peça" style="width: 46px; height: 46px; flex-shrink: 0; background: #FFC107; border: 0; border-radius: 12px; color: #27272A; display: flex; align-items: center; justify-content: center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          </button>
+        </div>
+
+        <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px">
+          <sc-for list="{{catFilters}}" as="f" hint-placeholder-count="6">
+            <button type="button" onClick="{{f.pick}}" aria-pressed="{{f.selected}}" style="{{f.style}}">{{f.label}}</button>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{stockEmpty}}" hint-placeholder-val="{{ false }}">
+          <span style="padding: 18px; background: #27272A; border-radius: 12px; color: #A1A1AA; text-align: center; font-size: 13px">Nenhuma peça encontrada.</span>
+        </sc-if>
+
+        <sc-for list="{{stock}}" as="sk" hint-placeholder-count="5">
+          <div style="display: flex; gap: 12px; padding: 12px; background: #27272A; border: 1px solid #3F3F46; border-radius: 14px">
+            <div style="width: 56px; height: 56px; border-radius: 12px; background: #3F3F46; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #FFC107">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"></path></svg>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0">
+              <div style="display: flex; align-items: flex-start; gap: 6px">
+                <span style="display: flex; flex-direction: column; flex: 1; min-width: 0">
+                  <input type="text" value="{{sk.name}}" onChange="{{sk.setName}}" aria-label="Nome da peça" style="width: 100%; box-sizing: border-box; height: 24px; padding: 0; background: transparent; border: 0; color: #FFFFFF; font-size: 14px; font-weight: 600">
+                  <span style="font-size: 12px; color: #A1A1AA">{{sk.cat}} · Em estoque: <span style="color: #FFFFFF; font-weight: 600">{{sk.qty}} un.</span></span>
+                </span>
+                <sc-if value="{{sk.isRed}}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: #3B1414; color: #F87171; white-space: nowrap">Repor</span>
+                </sc-if>
+              </div>
+              <div style="height: 6px; border-radius: 3px; background: #3F3F46; overflow: hidden" aria-hidden="true"><span style="{{sk.barStyle}}"></span></div>
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px; font-size: 11px; color: #A1A1AA">
+                <label style="display: flex; align-items: center; gap: 2px">
+                  Mín.
+                  <input type="text" inputMode="numeric" value="{{sk.min}}" onChange="{{sk.setMin}}" aria-label="Quantidade mínima" style="width: 24px; background: transparent; border: 0; border-bottom: 1px dashed #5A5A5A; color: #FFFFFF; font-size: 11px; padding: 0; text-align: center">
+                </label>
+                <label style="display: flex; align-items: center; gap: 2px">
+                  Custo R$
+                  <input type="text" inputMode="decimal" value="{{sk.custo}}" onChange="{{sk.setCusto}}" aria-label="Preço de custo por unidade" placeholder="—" style="width: 38px; background: transparent; border: 0; border-bottom: 1px dashed #5A5A5A; color: #FFFFFF; font-size: 11px; padding: 0; text-align: center">
+                  /un.
+                </label>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+                <span style="{{sk.pillStyle}}">{{sk.levelLabel}}</span>
+                <span style="display: flex; align-items: center; border: 1px solid #52525B; border-radius: 10px; overflow: hidden">
+                  <button type="button" onClick="{{sk.dec}}" aria-label="Diminuir quantidade" style="width: 44px; height: 38px; background: transparent; border: 0; color: #FFFFFF; font-size: 18px">−</button>
+                  <span style="width: 1px; height: 22px; background: #52525B"></span>
+                  <button type="button" onClick="{{sk.inc}}" aria-label="Aumentar quantidade" style="width: 44px; height: 38px; background: transparent; border: 0; color: #FFC107; font-size: 18px">+</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+        <span style="font-size: 11px; color: #8A8A8A; text-align: center">Quantidades e custos de exemplo. A baixa é automática quando um serviço começa.</span>
+      </div>
+    </sc-if>
+
+    <!-- AJUSTES -->
+    <sc-if value="{{isSettings}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <section style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #27272A; border-radius: 12px">
+          <h2 style="margin: 0; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A1A1AA; font-weight: 500">Sua oficina (vai no orçamento)</h2>
+          <div style="display: flex; align-items: center; gap: 12px">
+            <sc-if value="{{hasLogo}}" hint-placeholder-val="{{ false }}"><img src="{{shopLogo}}" alt="Logo da oficina" style="width: 60px; height: 60px; object-fit: contain; background: #FFFFFF; border-radius: 12px; flex-shrink: 0"></sc-if>
+            <sc-if value="{{noLogo}}" hint-placeholder-val="{{ true }}"><div style="width: 60px; height: 60px; border-radius: 12px; border: 1.5px dashed #FFC107; display: flex; align-items: center; justify-content: center; color: #FFC107; font-size: 11px; flex-shrink: 0">LOGO</div></sc-if>
+            <label style="position: relative; height: 44px; padding: 0 16px; display: flex; align-items: center; border: 1.5px solid #FFC107; border-radius: 10px; color: #FFC107; font-weight: 500; cursor: pointer">
+              {{logoLabel}}
+              <input type="file" accept="image/png,image/jpeg,image/webp" onChange="{{setLogo}}" style="position: absolute; width: 1px; height: 1px; opacity: 0">
+            </label>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <label for="oficina" style="font-size: 12px; color: #A1A1AA">Nome da oficina</label>
+            <input id="oficina" type="text" placeholder="Ex.: Oficina São José" value="{{shop.nome}}" onChange="{{setShopNome}}" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF">
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <label for="tel" style="font-size: 12px; color: #A1A1AA">Telefone / WhatsApp</label>
+              <input id="tel" type="tel" placeholder="(00) 00000-0000" value="{{shop.tel}}" onChange="{{setShopTel}}" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <label for="cnpj" style="font-size: 12px; color: #A1A1AA">CNPJ</label>
+              <input id="cnpj" type="text" inputMode="numeric" placeholder="00.000.000/0000-00" value="{{shop.cnpj}}" onChange="{{setShopCnpj}}" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <label for="endereco" style="font-size: 12px; color: #A1A1AA">Endereço</label>
+            <input id="endereco" type="text" placeholder="Rua, número, bairro, cidade" value="{{shop.end}}" onChange="{{setShopEnd}}" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF">
+          </div>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #27272A; border-radius: 12px">
+          <h2 style="margin: 0; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A1A1AA; font-weight: 500">Preços</h2>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <label for="fator" style="font-size: 12px; color: #A1A1AA">Motos 250 cc+ (×)</label>
+              <input id="fator" type="text" inputMode="decimal" value="{{fator}}" onChange="{{setFator}}" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
+            </div>
+          </div>
+          <span style="font-size: 12px; color: #A1A1AA">Ex.: 1,3 deixa a revisão de uma Lander 250 30% mais cara que a de uma Factor 150.</span>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #27272A; border-radius: 12px">
+          <h2 style="margin: 0; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A1A1AA; font-weight: 500">Mecânico</h2>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <label for="mecanico" style="font-size: 12px; color: #A1A1AA">Seu nome</label>
+            <input id="mecanico" type="text" placeholder="Ex.: João" value="{{mecanico}}" onChange="{{setMecanico}}" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF">
+          </div>
+          <a href="Login.dc.html" style="height: 48px; display: flex; align-items: center; justify-content: center; border: 1.5px solid #FFC107; border-radius: 10px; color: #FFC107; text-decoration: none; font-weight: 500">Sair da conta</a>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: 6px; font-size: 11px; line-height: 1.5; color: #A1A1AA">
+          <h2 style="margin: 0; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A1A1AA; font-weight: 500">Créditos das fotos</h2>
+          <p style="margin: 0">Fotos dos modelos: Wikimedia Commons. MT-03: Retired electrician (CC0) · NMax: Chanokchon (CC BY-SA 4.0) · PCX 160: Ahri Boy (CC BY 4.0) · XMax 250: Firzafp (CC BY 4.0).</p>
+        </section>
+      </div>
+    </sc-if>
+  </main>
+
+  <sc-if value="{{showNav}}" hint-placeholder-val="{{ true }}">
+    <nav aria-label="Menu principal" style="flex-shrink: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 4px 4px 10px; background: #27272A; border-top: 1px solid #3F3F46">
+      <button type="button" onClick="{{navHome}}" style="{{navHomeStyle}}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+        Hoje
+      </button>
+      <button type="button" onClick="{{navOs}}" style="{{navOsStyle}}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"></path><path d="M9 11h7M9 15h7M9 7h3"></path></svg>
+        Ordens
+      </button>
+      <button type="button" onClick="{{navStock}}" style="{{navStockStyle}}; position: relative">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"></path><path d="M3 8l9 5 9-5M12 13v8"></path></svg>
+        Estoque
+      <sc-if value="{{hasLowStock}}" hint-placeholder-val="{{ true }}"><span style="position: absolute; top: 4px; right: 20px; min-width: 16px; height: 16px; padding: 0 3px; box-sizing: border-box; border-radius: 8px; background: #EF4444; color: #FFFFFF; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center">{{lowCount}}</span></sc-if></button>
+      <button type="button" onClick="{{navSet}}" style="{{navSetStyle}}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"></path></svg>
+        Ajustes
+      </button>
+    </nav>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    this.state = {
+      screen: 'home', brand: 'honda', modelId: null, rev: 'geral', km: '6000', edits: {}, names: {}, uid: 0,
+      q: { cliente: '', tel: '', placa: '', km: '', desconto: '0', pag: 'pix', parcelas: 1, validade: '' },
+      photos: [],
+      shop: { nome: '', tel: '', cnpj: '', end: '', logo: '', logoW: 0, logoH: 0 }, lastId: null, pdfMsg: '', mecanico: '', fator: '1,3', validade: '7',
+      // atendimentos de exemplo para o protótipo
+      history: [
+        { id: 'os3', modelId: 'cg160titan', num: '0003', placa: '[PLACA]', cliente: '[Cliente]', moto: 'Honda CG 160', rev: 'Troca de óleo + filtro', data: hoje, hora: '10:24', mecanico: 'Mecânico', status: 1, parts: 70, labor: 25, total: 95, items: ['Troca de óleo do motor', 'Filtro de óleo'], fotos: 0 },
+        { id: 'os2', modelId: 'fz25', num: '0002', placa: '[PLACA]', cliente: '[Cliente]', moto: 'Yamaha Fazer 250', rev: 'Revisão completa', data: hoje, hora: '09:12', mecanico: 'Mecânico', status: 0, parts: 182, labor: 162, total: 344, items: [], fotos: 0 },
+        { id: 'os1', modelId: 'biz125', num: '0001', placa: '[PLACA]', cliente: '[Cliente]', moto: 'Honda Biz 125', rev: 'Ajuste de freios', data: 'Ontem', hora: 'Ontem', mecanico: 'Mecânico', status: 2, parts: 0, labor: 40, total: 40, items: [], fotos: 0 }
+      ],
+      osNum: 3, osFilter: -1, deckIdx: 0, deckFilter: -1, busca: '', flash: '',
+      stockBusca: '', stockCat: 'Todas', stockLow: false,
+      stock: [
+        { id: 's1', name: 'Filtro de óleo', cat: 'Filtros', servico: 'Filtro de óleo', qty: 12, min: '5', custo: '18' },
+        { id: 's2', name: 'Pastilha de freio dianteira', cat: 'Freios', servico: 'Pastilha de freio dianteira', qty: 3, min: '4', custo: '35' },
+        { id: 's3', name: 'Óleo do motor 1L', cat: 'Óleos', servico: 'Troca de óleo do motor', qty: 24, min: '10', custo: '28' },
+        { id: 's4', name: 'Vela de ignição', cat: 'Ignição', servico: 'Vela de ignição', qty: 12, min: '6', custo: '15' },
+        { id: 's5', name: 'Filtro de ar', cat: 'Filtros', servico: 'Filtro de ar', qty: 1, min: '4', custo: '22' },
+        { id: 's6', name: 'Lona/pastilha traseira', cat: 'Freios', servico: 'Lona/pastilha de freio traseira', qty: 5, min: '4', custo: '30' },
+        { id: 's7', name: 'Kit relação', cat: 'Transmissão', servico: 'Kit relação', qty: 0, min: '3', custo: '120' },
+        { id: 's8', name: 'Fluido de freio', cat: 'Freios', servico: 'Fluido de freio', qty: 4, min: '2', custo: '20' }
+      ]
+    };
+    // [id, nome, tipo, faixa (1 = até 160 cc, 2 = 250 cc+), primeiro ano-modelo no Brasil, último ano (se saiu de linha)]
+    this.brands = {
+      honda: { name: 'Honda', models: [
+        ['cg160titan', 'CG 160 Titan', 'Street', 1, 2016], ['cg160fan', 'CG 160 Fan', 'Street', 1, 2016], ['cg160start', 'CG 160 Start', 'Street', 1, 2016],
+        ['biz125', 'Biz 125', 'Cub', 1, 2005], ['pop110i', 'Pop 110i', 'Cub', 1, 2016], ['bros160', 'NXR 160 Bros', 'Trail', 1, 2015],
+        ['sahara300', 'XRE 300 Sahara', 'Trail', 2, 2024], ['twister300', 'CB 300F Twister', 'Street', 2, 2023], ['pcx160', 'PCX 160', 'Scooter', 1, 2023], ['elite125', 'Elite 125', 'Scooter', 1, 2019]
+      ] },
+      yamaha: { name: 'Yamaha', models: [
+        ['factor150', 'Factor 150', 'Street', 1, 2016], ['fz15', 'Fazer FZ15', 'Street', 1, 2023], ['fz25', 'Fazer FZ25', 'Street', 2, 2018],
+        ['mt03', 'MT-03', 'Naked', 2, 2016], ['crosser150', 'Crosser 150', 'Trail', 1, 2014], ['lander250', 'Lander 250', 'Trail', 2, 2006],
+        ['nmax160', 'NMax 160', 'Scooter', 1, 2017], ['xmax250', 'XMax 250', 'Scooter', 2, 2020], ['fluo125', 'Fluo 125', 'Scooter', 1, 2022], ['neo125', 'Neo 125', 'Scooter', 1, 2016, 2025]
+      ] }
+    };
+    // fotos dos modelos (url da imagem enviada; vazio = desenho)
+    this.fotos = { mt03: '/_blob/b72fad0aeff32e1a5cc5544fe7acb02e', nmax160: '/_blob/3c6a58f7401bb8ad26030e7acc547ebf', pcx160: '/_blob/8fe5c733e1179cc59b2667cdfc67248d', xmax250: '/_blob/a2f409746ba9bcea9774d52fe75dca2e' };
+    this.revs = [['geral', 'Geral', 'Revisão geral'], ['dianteira', 'Dianteira', 'Revisão dianteira'], ['traseira', 'Traseira', 'Revisão traseira'], ['especifico', 'Específico', 'Serviço específico']];
+    this.sugestoes = [['Pneu dianteiro', 180, 30], ['Pneu traseiro', 220, 30], ['Kit relação', 180, 50], ['Kit embreagem', 120, 80], ['Bateria', 180, 10], ['Cabo de embreagem', 30, 25], ['Lâmpada do farol', 25, 10], ['Limpeza de bicos injetores', 0, 90], ['Retífica de disco de freio', 0, 70]];
+    this.payOpts = [['pix', 'Pix'], ['dinheiro', 'Dinheiro'], ['debito', 'Débito'], ['credito', 'Crédito']];
+    this.statuses = ['Aguardando aprovação', 'Em serviço', 'Pronta p/ retirar'];
+    this.statusShort = ['Aguardando', 'Em serviço', 'Pronta'];
+    this.nextLabels = ['Iniciar serviço', 'Marcar como pronta'];
+    this.statusColors = [['#3A2F0B', '#FFC107', '#FFC107'], ['#0C2A44', '#60A5FA', '#3B82F6'], ['#0F2E1C', '#4ADE80', '#22C55E']];
+    this.templates = {
+      especifico: [],
+      geral: [['Troca de óleo do motor', 45, 20], ['Filtro de óleo', 25, 5], ['Filtro de ar', 40, 10], ['Vela de ignição', 30, 10], ['Limpeza e regulagem da corrente', 0, 30], ['Regulagem de freios', 0, 20], ['Check-up elétrico', 0, 30]],
+      dianteira: [['Pastilha de freio dianteira', 60, 30], ['Óleo da suspensão', 50, 40], ['Retentores da bengala', 70, 60], ['Rolamentos da roda dianteira', 60, 40]],
+      traseira: [['Lona/pastilha de freio traseira', 50, 30], ['Kit relação', 180, 50], ['Rolamentos da roda traseira', 60, 40], ['Borracha do cubo (coxim)', 40, 20]],
+      km1000: [['Troca de óleo do motor', 45, 20], ['Limpeza da tela do filtro', 0, 15], ['Regulagem da corrente', 0, 20], ['Revisão de apertos', 0, 30]],
+      km6000: [['Troca de óleo do motor', 45, 20], ['Filtro de óleo', 25, 5], ['Vela de ignição', 30, 10], ['Limpeza e regulagem da corrente', 0, 30], ['Regulagem de freios', 0, 20]],
+      km12000: [['Troca de óleo do motor', 45, 20], ['Filtro de óleo', 25, 5], ['Filtro de ar', 40, 10], ['Vela de ignição', 30, 10], ['Fluido de freio', 30, 25], ['Regulagem de válvulas', 0, 60], ['Limpeza e regulagem da corrente', 0, 30]]
+    };
+  }
+
+  // guarda as telas visitadas para o botão Voltar
+  setState(change, cb) {
+    if (change && change.screen && this.state && change.screen !== this.state.screen && !change.voltando) {
+      change = Object.assign({}, change, { pilha: (this.state.pilha || []).concat([this.state.screen]).slice(-15) });
+    }
+    if (change && change.voltando) {
+      change = Object.assign({}, change);
+      delete change.voltando;
+    }
+    return super.setState(change, cb);
+  }
+
+  voltar(back) {
+    const s = this.state;
+    const pilha = (s.pilha || []).slice();
+    let prev = pilha.pop() || back[s.screen] || 'home';
+    if (s.screen === 'done' || prev === s.screen) prev = 'home';
+    this.setState({ screen: prev, pilha: pilha, flash: '', voltando: true });
+  }
+
+  tplKey() { return this.state.rev === 'km' ? 'km' + this.state.km : this.state.rev; }
+  key() { return this.state.modelId + ':' + this.tplKey(); }
+
+  model() {
+    const s = this.state;
+    const b = this.brands[s.brand];
+    return b && s.modelId ? b.models.find((m) => m[0] === s.modelId) : null;
+  }
+
+  currentItems() {
+    const saved = this.state.edits[this.key()];
+    if (saved) return saved;
+    const m = this.model();
+    const f = m && m[3] === 2 ? this.num(this.state.fator) || 1 : 1;
+    return this.templates[this.tplKey()].map((t, i) => ({ id: 't' + i, name: t[0], part: String(Math.round(t[1] * f)), labor: String(Math.round(t[2] * f)), on: true }));
+  }
+
+  saveItems(list) {
+    const edits = Object.assign({}, this.state.edits);
+    edits[this.key()] = list;
+    this.setState({ edits: edits });
+  }
+
+  patch(i, change) {
+    this.saveItems(this.currentItems().map((it, j) => (j === i ? Object.assign({}, it, change) : it)));
+  }
+
+  patchStock(id, change) {
+    this.setState({ stock: this.state.stock.map((sk) => (sk.id === id ? Object.assign({}, sk, change) : sk)) });
+  }
+
+  stockLevel(sk) {
+    const min = this.num(sk.min);
+    if (sk.qty <= Math.floor(min / 2)) return 'red';
+    if (sk.qty <= min) return 'yellow';
+    return 'green';
+  }
+
+  advance(id) {
+    const s = this.state;
+    let used = 0;
+    let stock = s.stock;
+    const history = s.history.map((h) => {
+      if (h.id !== id) return h;
+      const next = Math.min(2, h.status + 1);
+      if (next === 1) {
+        stock = stock.map((sk) => {
+          if (h.items.indexOf(sk.servico) !== -1 && sk.qty > 0) { used += 1; return Object.assign({}, sk, { qty: sk.qty - 1 }); }
+          return sk;
+        });
+      }
+      return Object.assign({}, h, { status: next });
+    });
+    this.setState({ history: history, stock: stock, flash: used ? 'Serviço iniciado. Baixa de ' + used + (used === 1 ? ' peça' : ' peças') + ' no estoque.' : '' });
+  }
+
+  openWa(phone, text) {
+    let digits = String(phone || '').replace(/\D/g, '');
+    if (digits && digits.length <= 11) digits = '55' + digits;
+    window.open('https://wa.me/' + digits + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+  }
+
+  avisarMsg(h) {
+    const shop = this.state.shop.nome.trim();
+    const nome = h.cliente && h.cliente.charAt(0) !== '[' && h.cliente !== 'Cliente sem nome' ? ', ' + h.cliente.split(/\s+/)[0] : '';
+    return 'Olá' + nome + '! Sua ' + h.moto + ' está pronta para retirada' + (shop ? ' na ' + shop : '') + '. Total: ' + this.brl(h.total) + '. Qualquer dúvida, é só chamar.';
+  }
+
+  reenviarMsg(h) {
+    const shop = this.state.shop.nome.trim();
+    return 'Olá! Passando para lembrar do orçamento da sua ' + h.moto + ' (' + h.rev + ')' + (shop ? ' na ' + shop : '') + ': ' + this.brl(h.total) + '. Responda *SIM* para aprovar.';
+  }
+
+  loadLogo(e) {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const sc = Math.min(1, 300 / Math.max(img.width, img.height));
+        const w = Math.max(1, Math.round(img.width * sc));
+        const h = Math.max(1, Math.round(img.height * sc));
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        const jpg = c.toDataURL('image/jpeg', 0.92);
+        this.setState({ shop: Object.assign({}, this.state.shop, { logo: jpg, logoW: w, logoH: h }) });
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(f);
+  }
+
+  // PDF A4 feito à mão (Helvetica + logo em JPEG)
+  buildPdf(h) {
+    const shop = this.state.shop;
+    const enc = (t) => String(t == null ? '' : t)
+      .replace(/[•–—−]/g, '-').replace(/[“”]/g, '"').replace(/[‘’]/g, "'")
+      .replace(/[^\x00-\xFF]/g, '?')
+      .replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+    const wide = { 'M': 833, 'W': 944, 'm': 833, 'w': 722, 'O': 778, 'Ç': 722, 'Ã': 667, 'A': 667, 'R': 722, 'D': 722, 'N': 722, 'Í': 278, 'I': 278, 'i': 222, 'l': 222, 'j': 222, 't': 278, 'f': 278, 'r': 333, ' ': 278, ',': 278, '.': 278, ':': 278, '-': 333, '$': 556 };
+    const tw = (t, size, bold) => {
+      let w = 0;
+      String(t).split('').forEach((ch) => { w += wide[ch] || (/[A-ZÀ-Ý]/.test(ch) ? 680 : 556); });
+      return w * size / 1000 * (bold ? 1.05 : 1);
+    };
+    const T = (x, y, size, t, bold, rgb) => 'BT /' + (bold ? 'F2' : 'F1') + ' ' + size + ' Tf ' + (rgb || '0.09 0.09 0.11') + ' rg ' + x.toFixed(1) + ' ' + y + ' Td (' + enc(t) + ') Tj ET\n';
+    const R = (xr, y, size, t, bold, rgb) => T(xr - tw(t, size, bold), y, size, t, bold, rgb);
+    const money = (v) => this.brl(v).replace(/ /g, ' ');
+    let c = '';
+    c += '1 0.757 0.027 rg 0 818 595 24 re f\n';
+    const hasLogo = !!shop.logo && shop.logoW > 0;
+    if (hasLogo) {
+      const sc = 64 / Math.max(shop.logoW, shop.logoH);
+      const dw = shop.logoW * sc, dh = shop.logoH * sc;
+      c += 'q ' + dw.toFixed(2) + ' 0 0 ' + dh.toFixed(2) + ' ' + (40 + (64 - dw) / 2).toFixed(2) + ' ' + (728 + (64 - dh) / 2).toFixed(2) + ' cm /Im1 Do Q\n';
+    } else {
+      const hexa = (cx, cy, r) => {
+        let d = '';
+        for (let k = 0; k < 6; k++) {
+          const a = Math.PI / 2 + k * Math.PI / 3;
+          d += (cx + r * Math.cos(a)).toFixed(1) + ' ' + (cy + r * Math.sin(a)).toFixed(1) + (k === 0 ? ' m ' : ' l ');
+        }
+        return d + 'h f\n';
+      };
+      c += '1 0.757 0.027 rg ' + hexa(72, 760, 32);
+      c += '0.09 0.09 0.11 rg ' + hexa(72, 760, 20);
+    }
+    const shopName = shop.nome.trim() || 'Minha Oficina';
+    const linha2 = [shop.tel.trim(), shop.cnpj.trim() ? 'CNPJ ' + shop.cnpj.trim() : ''].filter(Boolean).join('  ·  ');
+    c += T(116, 776, 16, shopName, true);
+    if (linha2) c += T(116, 761, 9, linha2, false, '0.32 0.32 0.36');
+    if (shop.end.trim()) c += T(116, 748, 9, shop.end.trim(), false, '0.32 0.32 0.36');
+    c += R(555, 776, 18, 'ORÇAMENTO', true);
+    c += R(555, 761, 10, 'Nº ' + h.num, false, '0.32 0.32 0.36');
+    c += R(555, 748, 10, 'Data: ' + h.data, false, '0.32 0.32 0.36');
+    c += '0.85 0.85 0.85 RG 1 w 40 715 m 555 715 l S\n';
+    const campo = (x, y, rot, val) => T(x, y + 14, 8, rot.toUpperCase(), true, '0.45 0.45 0.48') + T(x, y, 11, val || '-');
+    c += campo(40, 682, 'Cliente', h.cliente);
+    c += campo(230, 682, 'WhatsApp', h.tel);
+    c += campo(370, 682, 'Placa', h.placa);
+    c += campo(470, 682, 'Km', h.km);
+    c += campo(40, 645, 'Moto', h.moto);
+    c += campo(300, 645, 'Serviço', h.rev);
+    c += '1 0.757 0.027 rg 40 600 515 22 re f\n';
+    c += T(48, 607, 9, 'SERVIÇO / PEÇA', true);
+    c += R(390, 607, 9, 'PEÇA', true);
+    c += R(470, 607, 9, 'MÃO DE OBRA', true);
+    c += R(547, 607, 9, 'TOTAL', true);
+    let y = 582;
+    const itens = h.itemsFull || [];
+    itens.forEach((it) => {
+      c += T(48, y, 10, it.name);
+      c += R(390, y, 10, money(it.part));
+      c += R(470, y, 10, money(it.labor));
+      c += R(547, y, 10, money(it.part + it.labor), true);
+      c += '0.9 0.9 0.9 RG 0.5 w 40 ' + (y - 8) + ' m 555 ' + (y - 8) + ' l S\n';
+      y -= 22;
+    });
+    y -= 10;
+    c += T(360, y, 10, 'Peças', false, '0.32 0.32 0.36') + R(547, y, 10, money(h.parts));
+    y -= 18;
+    c += T(360, y, 10, 'Mão de obra', false, '0.32 0.32 0.36') + R(547, y, 10, money(h.labor));
+    y -= 30;
+    c += '0.09 0.09 0.11 rg 350 ' + (y - 9) + ' 205 30 re f\n';
+    c += T(362, y, 13, 'TOTAL', true, '1 0.757 0.027') + R(545, y, 14, money(h.total), true, '1 0.757 0.027');
+    c += T(40, y, 10, 'Pagamento: ' + (h.pag || '-'), false, '0.32 0.32 0.36');
+    c += T(40, 64, 8, 'Orçamento sujeito à aprovação do cliente. Os valores podem mudar se outros problemas forem encontrados durante o serviço.', false, '0.45 0.45 0.48');
+    c += T(40, 50, 8, 'Gerado pelo app Minha Oficina', false, '0.45 0.45 0.48');
+
+    const objs = [];
+    objs.push('<< /Type /Catalog /Pages 2 0 R >>');
+    objs.push('<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+    objs.push('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >>' + (hasLogo ? ' /XObject << /Im1 7 0 R >>' : '') + ' >> >>');
+    objs.push('<< /Length ' + c.length + ' >>\nstream\n' + c + 'endstream');
+    objs.push('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');
+    objs.push('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>');
+    if (hasLogo) {
+      const bin = atob(shop.logo.split(',')[1]);
+      objs.push('<< /Type /XObject /Subtype /Image /Width ' + shop.logoW + ' /Height ' + shop.logoH + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + bin.length + ' >>\nstream\n' + bin + '\nendstream');
+    }
+    let out = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';
+    const offs = [];
+    objs.forEach((o, k) => { offs.push(out.length); out += (k + 1) + ' 0 obj\n' + o + '\nendobj\n'; });
+    const xref = out.length;
+    out += 'xref\n0 ' + (objs.length + 1) + '\n0000000000 65535 f \n';
+    offs.forEach((o) => { out += String(o).padStart(10, '0') + ' 00000 n \n'; });
+    out += 'trailer\n<< /Size ' + (objs.length + 1) + ' /Root 1 0 R >>\nstartxref\n' + xref + '\n%%EOF';
+    const bytes = new Uint8Array(out.length);
+    for (let k = 0; k < out.length; k++) bytes[k] = out.charCodeAt(k) & 255;
+    return bytes;
+  }
+
+  async baixarPdf(h) {
+    const blob = new Blob([this.buildPdf(h)], { type: 'application/pdf' });
+    const filename = ('Orcamento-' + h.num + '-' + h.placa).replace(/[^A-Za-z0-9-]+/g, '-') + '.pdf';
+    let dl = null;
+    try { dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null; } catch (err) { dl = null; }
+    if (dl) {
+      try {
+        await dl.save({ filename: filename, data: blob });
+        this.setState({ pdfMsg: 'PDF salvo: ' + filename });
+      } catch (err) {
+        this.setState({ pdfMsg: err && err.code === 'declined' ? 'Download cancelado.' : 'Não foi possível salvar o PDF aqui.' });
+      }
+      return;
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.rel = 'noopener';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    this.setState({ pdfMsg: 'PDF gerado: ' + filename });
+  }
+
+  setQ(field) { return (e) => this.setState({ q: Object.assign({}, this.state.q, { [field]: e.target.value }) }); }
+  setShop(field) { return (e) => this.setState({ shop: Object.assign({}, this.state.shop, { [field]: e.target.value }) }); }
+
+  num(v) {
+    let t = String(v == null ? '' : v).trim();
+    if (t.indexOf(',') !== -1) t = t.replace(/\./g, '').replace(',', '.');
+    const n = parseFloat(t);
+    return isNaN(n) ? 0 : n;
+  }
+  brl(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+
+  chip(sel) {
+    return 'height: 40px; border-radius: 20px; font-weight: 500; font-size: 13px; padding: 0 16px; white-space: nowrap; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; gap: 6px; ' + (sel ? 'background: #FFC107; color: #27272A; border: 1px solid #FFC107' : 'background: #27272A; color: #FFFFFF; border: 1px solid #52525B');
+  }
+  seg(sel) {
+    return 'height: 40px; border: 0; border-radius: 20px; font-weight: 500; font-size: 13px; padding: 0 2px; ' + (sel ? 'background: #FFC107; color: #27272A' : 'background: transparent; color: #CFCFCF');
+  }
+  nav(sel) {
+    return 'height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: transparent; border: 0; font-size: 11px; border-radius: 10px; padding: 0; ' + (sel ? 'color: #FFC107; font-weight: 600' : 'color: #A1A1AA; font-weight: 400');
+  }
+  pill(status) {
+    const c = this.statusColors[status];
+    return 'font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 12px; white-space: nowrap; background: ' + c[0] + '; color: ' + c[1] + '; border: 1px solid ' + c[2];
+  }
+  go(screen) { return () => this.setState({ screen: screen, flash: '' }); }
+
+  renderVals() {
+    const s = this.state;
+    const brand = this.brands[s.brand];
+    const model = this.model();
+    const modelName = model ? (s.names[model[0]] ?? model[1]) + (s.ano ? ' ' + s.ano : '') : '';
+    const rev = this.revs.find((r) => r[0] === s.rev);
+    const revLabel = rev[2];
+    const items = model ? this.currentItems() : [];
+    const chosen = items.filter((it) => it.on);
+    const parts = chosen.reduce((a, it) => a + this.num(it.part), 0);
+    const labor = chosen.reduce((a, it) => a + this.num(it.labor), 0);
+    const sub = parts + labor;
+    const pct = 0;
+    const factor = 1 - pct / 100;
+    const total = sub * factor;
+    const payName = this.payOpts.find((p) => p[0] === s.q.pag)[1];
+    const payLine = (s.q.pag === 'credito' ? 'Crédito em ' + s.q.parcelas + 'x de ' + this.brl(total / s.q.parcelas) : payName);
+    const mecNome = s.mecanico.trim();
+    const mec = mecNome || 'Mecânico';
+    const iniciais = (mecNome ? mecNome.split(/\s+/).map((p) => p.charAt(0)).join('').slice(0, 2) : 'M').toUpperCase();
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    const shopNome = s.shop.nome.trim() || '[Nome da oficina]';
+
+    const lowAll = s.stock.filter((sk) => this.stockLevel(sk) !== 'green');
+    const stockBy = {};
+    s.stock.forEach((sk) => { stockBy[sk.servico] = sk; });
+    const sb = s.stockBusca.trim().toLowerCase();
+    const cats = ['Todas'].concat(s.stock.map((sk) => sk.cat).filter((c, i, arr) => arr.indexOf(c) === i));
+    const stockShown = s.stock.filter((sk) => {
+      if (s.stockLow && this.stockLevel(sk) === 'green') return false;
+      if (s.stockCat !== 'Todas' && sk.cat !== s.stockCat) return false;
+      return !sb || sk.name.toLowerCase().indexOf(sb) !== -1;
+    });
+    const stockUnits = s.stock.reduce((a, sk) => a + sk.qty, 0);
+    const stockValue = s.stock.reduce((a, sk) => a + sk.qty * this.num(sk.custo), 0);
+
+    const busca = s.busca.trim().toLowerCase();
+    const osList = s.history.filter((h) => (s.osFilter === -1 || h.status === s.osFilter) && (!busca || h.placa.toLowerCase().indexOf(busca) !== -1 || h.cliente.toLowerCase().indexOf(busca) !== -1));
+
+    const deck = s.history.filter((h) => s.deckFilter === -1 || h.status === s.deckFilter);
+    const deckIdx = deck.length ? Math.min(s.deckIdx, deck.length - 1) : 0;
+    const cur = deck[deckIdx];
+    const doneEntry = s.history.find((h) => h.id === s.lastId) || null;
+    const flowStep = { brand: 0, models: 0, detail: 1, quote: 2, done: 3 }[s.screen];
+    const brlCurto = (v) => this.brl(v);
+    const tarefas = [];
+    s.history.filter((h) => h.status === 2 && !h.entregue).forEach((h) => {
+      const base = h.rev + ' · ' + brlCurto(h.total) + ' · ' + h.placa;
+      if (!h.avisado) {
+        tarefas.push({ titulo: 'Avisar o cliente: a ' + h.moto.replace(/^(Honda|Yamaha) /, '') + ' está pronta', sub: base, rotulo: 'Avisar no WhatsApp', wa: true, cor: '#22C55E',
+          acao: () => { this.openWa(h.tel, this.avisarMsg(h)); this.setState({ history: this.state.history.map((x) => (x.id === h.id ? Object.assign({}, x, { avisado: true }) : x)) }); } });
+      } else {
+        tarefas.push({ titulo: 'Entregar a ' + h.moto.replace(/^(Honda|Yamaha) /, ''), sub: 'Cliente já avisado · ' + base, rotulo: 'Moto entregue', wa: false, cor: '#22C55E',
+          acao: () => this.setState({ history: this.state.history.map((x) => (x.id === h.id ? Object.assign({}, x, { entregue: true }) : x)), flash: 'Moto entregue. Bom trabalho!' }) });
+      }
+    });
+    s.history.filter((h) => h.status === 1).forEach((h) => {
+      tarefas.push({ titulo: 'Terminar a ' + h.moto.replace(/^(Honda|Yamaha) /, ''), sub: 'Em serviço · ' + h.rev + ' · ' + brlCurto(h.total), rotulo: 'Marcar como pronta', wa: false, cor: '#3B82F6', acao: () => this.advance(h.id) });
+    });
+    s.history.filter((h) => h.status === 0).forEach((h) => {
+      tarefas.push({ titulo: 'Cobrar aprovação da ' + h.moto.replace(/^(Honda|Yamaha) /, ''), sub: 'Aguardando · ' + h.rev + ' · ' + brlCurto(h.total), rotulo: 'Reenviar no WhatsApp', wa: true, cor: '#FFC107', acao: () => this.openWa(h.tel, this.reenviarMsg(h)), acao2: () => this.advance(h.id) });
+    });
+    if (lowAll.length) {
+      tarefas.push({ titulo: 'Repor ' + lowAll.length + (lowAll.length === 1 ? ' peça' : ' peças'), sub: lowAll.map((sk) => sk.name).join(', '), rotulo: 'Ver estoque', wa: false, cor: '#F87171',
+        acao: () => this.setState({ screen: 'stock', stockLow: true, stockCat: 'Todas', flash: '' }) });
+    }
+    const hora = new Date().getHours();
+    const prox = tarefas[0];
+    const titles = {
+      home: ['', ''], brand: ['Nova OS', 'Escolha a marca'], models: [brand.name, 'Escolha o modelo'],
+      detail: [modelName, 'Escolha os serviços'], quote: ['Cliente e pagamento', modelName + ' · ' + revLabel], done: ['Orçamento pronto', 'Baixe o PDF ou envie no WhatsApp'],
+      os: ['Ordens de serviço', s.history.length + ' ordens'], stock: ['Estoque', shopNome],
+      settings: ['Ajustes', 'Oficina, preços e mecânico']
+    };
+    const back = { brand: 'home', models: 'brand', detail: 'models', quote: 'detail' };
+    const navScreens = ['home', 'os', 'stock', 'settings'];
+
+    return {
+      isHome: s.screen === 'home', notHome: s.screen !== 'home',
+      isBrand: s.screen === 'brand', isModels: s.screen === 'models', isDetail: s.screen === 'detail', isQuote: s.screen === 'quote', isDone: s.screen === 'done',
+      isOs: s.screen === 'os', isStock: s.screen === 'stock', isSettings: s.screen === 'settings',
+      showNav: navScreens.indexOf(s.screen) !== -1,
+      headerTitle: titles[s.screen][0], headerSub: titles[s.screen][1],
+      showBack: s.screen !== 'home',
+      goBack: () => this.voltar(back),
+      mecIniciais: iniciais,
+      saudacaoHora: (hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite') + (mecNome ? ', ' + mecNome.split(/\s+/)[0] : ''),
+      tarefasTxt: tarefas.length ? tarefas.length + (tarefas.length === 1 ? ' coisa para fazer hoje' : ' coisas para fazer hoje') : 'Tudo em dia por aqui',
+      proximo: prox ? {
+        titulo: prox.titulo, sub: prox.sub, temAcao: true, wa: prox.wa, rotulo: prox.rotulo, acao: prox.acao,
+        estilo: 'height: 52px; border-radius: 14px; border: 0; font-weight: 600; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; ' + (prox.wa ? 'background: #22C55E; color: #052E12' : 'background: #FFC107; color: #18181B')
+      } : { titulo: 'Nenhuma moto esperando. Que tal um orçamento novo?', sub: 'As tarefas do dia aparecem aqui.', temAcao: false, wa: false, rotulo: '', acao: () => {} },
+      temDepois: tarefas.length > 1,
+      depois: tarefas.slice(1).map((t, i, arr) => ({
+        titulo: t.titulo, sub: t.sub, rotulo: t.rotulo, acao: t.acao, linha: i < arr.length - 1,
+        dot: 'width: 22px; height: 22px; border-radius: 50%; box-sizing: border-box; flex-shrink: 0; border: 2px solid ' + t.cor
+      })),
+      inFlow: flowStep !== undefined,
+      steps: ['Moto', 'Serviços', 'Cliente', 'PDF'].map((l, i) => ({
+        label: (i + 1) + '. ' + l,
+        bar: 'display: block; height: 4px; border-radius: 2px; background: ' + (i <= flowStep ? '#FFC107' : '#3F3F46'),
+        labelStyle: 'font-size: 11px; ' + (i === flowStep ? 'color: #FFFFFF; font-weight: 600' : 'color: #A1A1AA')
+      })),
+      isEspecifico: s.rev === 'especifico',
+      sugestoes: this.sugestoes.map((sg) => ({ label: sg[0], add: () => {
+        const uid = s.uid + 1;
+        const f = model && model[3] === 2 ? this.num(s.fator) || 1 : 1;
+        this.setState({ uid: uid });
+        this.saveItems(this.currentItems().concat([{ id: 'g' + uid, name: sg[0], part: String(Math.round(sg[1] * f)), labor: String(Math.round(sg[2] * f)), on: true }]));
+      } })),
+      shopLogo: s.shop.logo, hasLogo: !!s.shop.logo, noLogo: !s.shop.logo,
+      logoLabel: s.shop.logo ? 'Trocar logo' : 'Enviar logo',
+      setLogo: (e) => this.loadLogo(e),
+      done: doneEntry ? {
+        num: doneEntry.num, moto: doneEntry.moto, rev: doneEntry.rev, data: doneEntry.data, placa: doneEntry.placa, cliente: doneEntry.cliente,
+        totalFmt: this.brl(doneEntry.total),
+        linhas: (doneEntry.itemsFull || []).map((it) => ({ name: it.name, totalFmt: this.brl(it.part + it.labor) }))
+      } : { linhas: [] },
+      hasPdfMsg: !!s.pdfMsg, pdfMsg: s.pdfMsg,
+      baixarPdf: () => { if (doneEntry) this.baixarPdf(doneEntry); },
+      enviarWaDone: () => { if (doneEntry) this.openWa(doneEntry.tel, doneEntry.msg); },
+      shopNome: shopNome,
+      saudacao: mecNome ? 'Olá, ' + mecNome.split(/\s+/)[0] + '!' : 'Olá!',
+      hasFlash: !!s.flash, flash: s.flash,
+      navHome: this.go('home'), navOs: this.go('os'), navStock: this.go('stock'), navSet: this.go('settings'),
+      navStockBaixo: () => this.setState({ screen: 'stock', stockLow: true, stockCat: 'Todas', flash: '' }),
+      navHomeStyle: this.nav(s.screen === 'home'), navOsStyle: this.nav(s.screen === 'os'), navStockStyle: this.nav(s.screen === 'stock'), navSetStyle: this.nav(s.screen === 'settings'),
+      novoOrc: () => this.setState({ screen: 'brand', flash: '' }),
+      filtroPend: () => this.setState({ screen: 'os', osFilter: 0, flash: '' }),
+      filtroManut: () => this.setState({ screen: 'os', osFilter: 1, flash: '' }),
+
+      statHoje: s.history.filter((h) => h.data === hoje).length,
+      statPend: s.history.filter((h) => h.status === 0).length,
+      statManut: s.history.filter((h) => h.status === 1).length,
+      hasPend: s.history.some((h) => h.status === 0),
+      hasLowStock: lowAll.length > 0,
+      lowCount: lowAll.length,
+      lowStockText: lowAll.length + (lowAll.length === 1 ? ' peça abaixo do mínimo' : ' peças abaixo do mínimo'),
+      recent: s.history.slice(0, 3).map((h) => ({ moto: h.moto, rev: h.rev, hora: h.hora, statusShort: this.statusShort[h.status], statusStyle: this.pill(h.status) })),
+      recentEmpty: s.history.length === 0,
+      deckFilters: [[-1, 'Todas'], [0, 'Aguardando'], [1, 'Em serviço'], [2, 'Prontas']].map((f) => ({
+        label: f[1] + ' · ' + s.history.filter((h) => f[0] === -1 || h.status === f[0]).length,
+        selected: f[0] === s.deckFilter ? 'true' : 'false',
+        pick: () => this.setState({ deckFilter: f[0], deckIdx: 0 }),
+        style: 'height: 36px; padding: 0 14px; border-radius: 18px; border: 0; font-size: 12px; white-space: nowrap; flex-shrink: 0; ' + (f[0] === s.deckFilter ? 'background: #FFC107; color: #18181B; font-weight: 600' : 'background: #27272A; color: #FFFFFF')
+      })),
+      deckEmpty: deck.length === 0, hasDeck: deck.length > 0, hasBack1: deck.length > 1, hasBack2: deck.length > 2,
+      deckDots: deck.map((h, i) => ({ style: 'height: 6px; border-radius: 3px; background: ' + (i === deckIdx ? '#FFC107; width: 20px' : '#52525B; width: 6px') })),
+      deckPrev: () => this.setState({ deckIdx: (deckIdx - 1 + deck.length) % Math.max(1, deck.length) }),
+      deckNext: () => this.setState({ deckIdx: (deckIdx + 1) % Math.max(1, deck.length) }),
+      deckTouchStart: (e) => { this.touchX = e.touches && e.touches[0] ? e.touches[0].clientX : null; },
+      deckTouchEnd: (e) => {
+        if (this.touchX == null || !e.changedTouches || !e.changedTouches[0] || deck.length < 2) return;
+        const dx = e.changedTouches[0].clientX - this.touchX;
+        this.touchX = null;
+        if (dx < -40) this.setState({ deckIdx: (deckIdx + 1) % deck.length });
+        if (dx > 40) this.setState({ deckIdx: (deckIdx - 1 + deck.length) % deck.length });
+      },
+      card: cur ? {
+        status: this.statuses[cur.status],
+        statusStyle: 'font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 14px; background: ' + ['#FEF3C7', '#DBEAFE', '#DCFCE7'][cur.status] + '; color: ' + ['#92400E', '#1E40AF', '#166534'][cur.status],
+        info: 'OS ' + cur.num + ' · ' + (deckIdx + 1) + ' de ' + deck.length,
+        moto: cur.moto, sub: cur.rev + ' · ' + cur.placa,
+        foto: this.fotos[cur.modelId] || '', hasFoto: !!this.fotos[cur.modelId], noFoto: !this.fotos[cur.modelId],
+        detail: (cur.items.length ? cur.items.length + (cur.items.length === 1 ? ' item · ' : ' itens · ') : '') + cur.cliente,
+        totalFmt: this.brl(cur.total),
+        isWaiting: cur.status === 0,
+        reenviar: () => this.openWa(cur.tel, this.reenviarMsg(cur)),
+        actionLabel: cur.status < 2 ? this.nextLabels[cur.status] : 'Avisar no WhatsApp',
+        actionStyle: 'height: 54px; border-radius: 16px; border: 0; font-weight: 700; font-size: 15px; ' + (cur.status < 2 ? 'background: #18181B; color: #FFC107' : 'background: #22C55E; color: #052E12'),
+        action: () => (cur.status < 2 ? this.advance(cur.id) : this.openWa(cur.tel, this.avisarMsg(cur)))
+      } : {},
+
+      brands: Object.keys(this.brands).map((k) => ({ name: this.brands[k].name, logo: { honda: '/_blob/a43502f4bff8d474224573e6696b24f8', yamaha: '/_blob/bedcfb5f45c3be264da6f69a770ec574' }[k], count: this.brands[k].models.length, pick: () => this.setState({ brand: k, screen: 'models', flash: '' }) })),
+      models: brand.models.map((m) => {
+        const primeiro = m[4];
+        const aberto = !!primeiro && s.openModel === m[0];
+        const anos = [];
+        const ultimo = m[5] || 2026;
+        if (primeiro) for (let y = ultimo; y >= primeiro; y--) anos.push(y);
+        return {
+          apelido: { cg160titan: 'Titan', cg160fan: 'Fan', cg160start: 'Start', biz125: 'Biz', pop110i: 'Pop', bros160: 'Bros', sahara300: 'Sahara', twister300: 'Twister', pcx160: 'PCX', elite125: 'Elite', factor150: 'Factor', fz15: 'FZ15', fz25: 'FZ25', mt03: 'MT-03', crosser150: 'Crosser', lander250: 'Lander', nmax160: 'NMax', xmax250: 'XMax', fluo125: 'Fluo', neo125: 'Neo' }[m[0]] || m[1],
+          name: s.names[m[0]] ?? m[1], kind: m[2], faixa: m[3] === 2 ? '250 cc ou mais' : 'até 160 cc',
+          anosTxt: primeiro ? ' · ' + primeiro + ' a ' + ultimo : '',
+          open: aberto, expanded: aberto ? 'true' : 'false',
+          cardStyle: 'display: flex; flex-direction: column; background: #27272A; border-radius: 12px; border: 1px solid ' + (aberto ? '#FFC107' : '#3F3F46'),
+          chevStyle: 'flex-shrink: 0; transition: transform 0.2s; transform: rotate(' + (aberto ? 90 : 0) + 'deg)',
+          pick: () => (primeiro ? this.setState({ openModel: aberto ? null : m[0] }) : this.setState({ modelId: m[0], ano: null, rev: 'geral', screen: 'detail', flash: '' })),
+          anos: anos.map((y) => ({ ano: y, pick: () => this.setState({ modelId: m[0], ano: y, openModel: null, rev: 'geral', screen: 'detail', flash: '' }) }))
+        };
+      }),
+      brandName: brand.name,
+      modelName: modelName,
+      anoTxt: s.ano ? ' · ano ' + s.ano : '',
+      modelBase: model ? (s.names[model[0]] ?? model[1]) : '',
+      faixaInfo: model ? (model[3] === 2 ? '250 cc ou mais · preços ×' + s.fator : 'Até 160 cc · preço base') : '',
+      setModelName: (e) => { const names = Object.assign({}, s.names); names[s.modelId] = e.target.value; this.setState({ names: names }); },
+      revLabel: revLabel,
+      tabs: this.revs.map((r) => ({ label: r[1], selected: r[0] === s.rev ? 'true' : 'false', pick: () => this.setState({ rev: r[0] }), style: this.seg(r[0] === s.rev), cls: r[0] === s.rev ? 'dica-brilho' : '' })),
+      items: items.map((it, i) => {
+        const sk = stockBy[it.name];
+        const lv = sk ? this.stockLevel(sk) : 'green';
+        return {
+          cid: 'item-' + it.id, name: it.name, part: it.part, labor: it.labor, on: it.on,
+          subFmt: this.brl(this.num(it.part) + this.num(it.labor)),
+          hasStockTag: !!sk,
+          stockTag: sk ? (sk.qty === 0 ? 'Sem estoque' : (lv === 'green' ? 'Em estoque: ' : 'Estoque baixo: ') + sk.qty + ' un.') : '',
+          stockStyle: 'align-self: flex-start; margin-left: 32px; font-size: 11px; font-weight: 500; padding: 2px 9px; border-radius: 12px; ' + (lv === 'red' ? 'background: #3B1414; color: #F87171' : lv === 'yellow' ? 'background: #3A2F0B; color: #FFC107' : 'background: #0F2E1C; color: #4ADE80'),
+          cardStyle: 'display: flex; flex-direction: column; gap: 6px; padding: 8px 8px 12px 12px; background: #27272A; border: 1px solid #3F3F46; border-radius: 12px; ' + (it.on ? '' : 'opacity: 0.5'),
+          toggle: () => this.patch(i, { on: !it.on }),
+          setName: (e) => this.patch(i, { name: e.target.value }),
+          setPart: (e) => this.patch(i, { part: e.target.value }),
+          setLabor: (e) => this.patch(i, { labor: e.target.value }),
+          remove: () => this.saveItems(items.filter((x, j) => j !== i))
+        };
+      }),
+      addItem: () => { const uid = s.uid + 1; this.setState({ uid: uid }); this.saveItems(items.concat([{ id: 'n' + uid, name: 'Novo item', part: '0', labor: '0', on: true }])); },
+      countLabel: chosen.length + (chosen.length === 1 ? ' item · subtotal' : ' itens · subtotal'),
+      subFmt: this.brl(sub),
+      toQuote: () => this.setState({ screen: 'quote' }),
+
+      q: s.q,
+      setCliente: this.setQ('cliente'), setTelCliente: this.setQ('tel'), setPlaca: this.setQ('placa'), setKmAtual: this.setQ('km'), 
+      pays: this.payOpts.map((p) => {
+        const sel = p[0] === s.q.pag;
+        const cor = { pix: ['#FFFFFF', '#18181B'], dinheiro: ['#BBF7D0', '#14532D'], debito: ['#BFDBFE', '#1E3A8A'], credito: ['#BFDBFE', '#1E3A8A'] }[p[0]];
+        return {
+          label: p[1], isPix: p[0] === 'pix', notPix: p[0] !== 'pix',
+          selected: sel ? 'true' : 'false',
+          pick: () => this.setState({ q: Object.assign({}, s.q, { pag: p[0] }) }),
+          style: 'height: 48px; padding: 0 4px; border-radius: 24px; font-size: 13px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: ' + cor[0] + '; color: ' + cor[1] + '; ' + (sel ? 'border: 3px solid #FFC107; font-weight: 700' : 'border: 3px solid transparent; font-weight: 500; opacity: 0.85')
+        };
+      }),
+      isCredito: s.q.pag === 'credito',
+      parcelas: [1, 2, 3, 4, 5, 6].map((n) => ({ label: n + 'x', selected: n === s.q.parcelas ? 'true' : 'false', pick: () => this.setState({ q: Object.assign({}, s.q, { parcelas: n }) }), style: this.chip(n === s.q.parcelas) + '; padding: 0' })),
+      shopLinha: [s.shop.tel.trim() || '[Telefone]', s.shop.cnpj.trim() ? 'CNPJ ' + s.shop.cnpj.trim() : '[CNPJ]'].join(' · '),
+      chosen: chosen.map((it) => ({ name: it.name, detail: 'Peça ' + this.brl(this.num(it.part)) + ' · M.O. ' + this.brl(this.num(it.labor)), totalFmt: this.brl(this.num(it.part) + this.num(it.labor)) })),
+      partsFmt: this.brl(parts), laborFmt: this.brl(labor),
+      totalFmt: this.brl(total),
+      payLine: payLine,
+      saveQuote: () => {
+        const n = s.osNum + 1;
+        const now = new Date();
+        const entry = {
+          id: 'os' + n, num: String(n).padStart(4, '0'),
+          placa: (s.q.placa.trim() || 'SEM PLACA').toUpperCase(), cliente: s.q.cliente.trim() || 'Cliente sem nome',
+          moto: brand.name + ' ' + modelName, modelId: s.modelId, rev: revLabel, data: hoje,
+          hora: String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'),
+          mecanico: mec, status: 0, parts: parts * factor, labor: labor * factor, total: total,
+          items: chosen.map((it) => it.name), fotos: 0, tel: s.q.tel, km: s.q.km, pag: payLine,
+          itemsFull: chosen.map((it) => ({ name: it.name, part: this.num(it.part), labor: this.num(it.labor) }))
+        };
+        const linhas = chosen.map((it) => '• ' + it.name + ': ' + this.brl(this.num(it.part) + this.num(it.labor)));
+        const msg = 'Olá' + (s.q.cliente.trim() ? ', ' + s.q.cliente.trim().split(/\s+/)[0] : '') + '! Segue o orçamento da sua ' + entry.moto + ' (' + revLabel + ')' + (s.shop.nome.trim() ? ' na ' + s.shop.nome.trim() : '') + ':\n\n' + linhas.join('\n') + '\n\n*Total: ' + this.brl(total) + '*\nPagamento: ' + payLine + '\n\nResponda *SIM* para aprovar.';
+        entry.msg = msg;
+        this.setState({
+          history: [entry].concat(s.history), osNum: n, screen: 'done', lastId: entry.id, pdfMsg: '', flash: '',
+          q: { cliente: '', tel: '', placa: '', km: '', desconto: '0', pag: 'pix', parcelas: 1, validade: '' }, photos: []
+        });
+      },
+
+      busca: s.busca, setBusca: (e) => this.setState({ busca: e.target.value }),
+      osFilters: [[-1, 'Todas']].concat(this.statusShort.map((l, i) => [i, l])).map((f) => ({ label: f[1], selected: f[0] === s.osFilter ? 'true' : 'false', pick: () => this.setState({ osFilter: f[0] }), style: this.chip(f[0] === s.osFilter) })),
+      osEmpty: osList.length === 0,
+      osList: osList.map((h) => ({
+        num: h.num, placa: h.placa, cliente: h.cliente, moto: h.moto, rev: h.rev, data: h.data, mecanico: h.mecanico,
+        totalFmt: this.brl(h.total), status: this.statuses[h.status],
+        fotosTxt: h.fotos ? ' · ' + h.fotos + (h.fotos === 1 ? ' foto' : ' fotos') : '',
+        statusStyle: this.pill(h.status),
+        steps: this.statuses.map((x, i) => ({ style: 'flex: 1; height: 4px; border-radius: 2px; background: ' + (i <= h.status ? '#FFC107' : '#52525B') })),
+        canAdvance: true, hasNext: h.status < 2, nextLabel: this.nextLabels[h.status] || '', isReady: h.status === 2,
+        advance: () => this.advance(h.id),
+        avisar: () => this.openWa(h.tel, 'Olá' + (h.cliente && h.cliente.charAt(0) !== '[' && h.cliente !== 'Cliente sem nome' ? ', ' + h.cliente.split(/\s+/)[0] : '') + '! Sua ' + h.moto + ' está pronta para retirada' + (s.shop.nome.trim() ? ' na ' + s.shop.nome.trim() : '') + '. Total: ' + this.brl(h.total) + '. Qualquer dúvida, é só chamar.')
+      })),
+
+      bellStock: () => this.setState({ stockLow: true, stockCat: 'Todas' }),
+      bellLabel: lowAll.length + ' peças com estoque baixo',
+      stockUnits: stockUnits,
+      stockValueFmt: this.brl(stockValue),
+      lowPressed: s.stockLow ? 'true' : 'false',
+      toggleLow: () => this.setState({ stockLow: !s.stockLow }),
+      lowCardStyle: 'display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px; border-radius: 12px; color: #FFFFFF; text-align: left; ' + (s.stockLow ? 'background: #3B1414; border: 1.5px solid #EF4444' : 'background: #27272A; border: 1px solid #3F3F46'),
+      stockBusca: s.stockBusca, setStockBusca: (e) => this.setState({ stockBusca: e.target.value }),
+      catFilters: cats.map((c) => ({ label: c, selected: c === s.stockCat ? 'true' : 'false', pick: () => this.setState({ stockCat: c }), style: this.chip(c === s.stockCat) })),
+      stockEmpty: stockShown.length === 0,
+      stock: stockShown.map((sk) => {
+        const lv = this.stockLevel(sk);
+        const min = this.num(sk.min);
+        const max = Math.max(min * 3, sk.qty, 1);
+        const color = { green: '#22C55E', yellow: '#FFC107', red: '#EF4444' }[lv];
+        const pill = { green: ['#0F2E1C', '#4ADE80', 'Estoque OK'], yellow: ['#3A2F0B', '#FFC107', 'Estoque baixo'], red: ['#3B1414', '#F87171', sk.qty === 0 ? 'Sem estoque' : 'Crítico'] }[lv];
+        return {
+          name: sk.name, cat: sk.cat, qty: sk.qty, min: sk.min, custo: sk.custo, isRed: lv === 'red',
+          levelLabel: pill[2],
+          pillStyle: 'font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px; white-space: nowrap; background: ' + pill[0] + '; color: ' + pill[1],
+          barStyle: 'display: block; height: 100%; border-radius: 3px; background: ' + color + '; width: ' + Math.max(sk.qty > 0 ? 4 : 0, Math.round(sk.qty / max * 100)) + '%',
+          setName: (e) => this.patchStock(sk.id, { name: e.target.value, servico: e.target.value }),
+          setMin: (e) => this.patchStock(sk.id, { min: e.target.value }),
+          setCusto: (e) => this.patchStock(sk.id, { custo: e.target.value }),
+          inc: () => this.patchStock(sk.id, { qty: sk.qty + 1 }),
+          dec: () => this.patchStock(sk.id, { qty: Math.max(0, sk.qty - 1) })
+        };
+      }),
+      addStock: () => { const uid = s.uid + 1; this.setState({ uid: uid, stockCat: 'Todas', stockLow: false, stockBusca: '', stock: [{ id: 'sn' + uid, name: 'Nova peça', cat: 'Outros', servico: 'Nova peça', qty: 0, min: '1', custo: '' }].concat(s.stock) }); },
+
+      shop: s.shop,
+      setShopNome: this.setShop('nome'), setShopTel: this.setShop('tel'), setShopCnpj: this.setShop('cnpj'), setShopEnd: this.setShop('end'),
+      fator: s.fator, setFator: (e) => this.setState({ fator: e.target.value }),
+      mecanico: s.mecanico, setMecanico: (e) => this.setState({ mecanico: e.target.value })
+    };
+  }
+}
+</script>
+</body>
+</html>
