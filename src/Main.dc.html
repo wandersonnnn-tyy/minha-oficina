@@ -423,6 +423,32 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
               <span style="{{h.statusStyle}}">{{h.status}}</span>
             </div>
             <span style="font-size: 14px">{{h.cliente}} · {{h.moto}}</span>
+            <span style="font-size: 12px; color: #A1A1AA">{{h.telTxt}}</span>
+            <sc-if value="{{h.naoEditando}}" hint-placeholder-val="{{ true }}">
+              <button type="button" onClick="{{h.editar}}" style="align-self: flex-start; display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-size: 12px; font-weight: 500">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg>Editar cliente
+              </button>
+            </sc-if>
+            <sc-if value="{{h.editando}}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #18181B; border: 1.5px solid #FFC107; border-radius: 12px">
+                <div style="display: flex; flex-direction: column; gap: 4px">
+                  <label for="ecNome" style="font-size: 12px; color: #A1A1AA">Nome</label>
+                  <input id="ecNome" type="text" value="{{edCli.cliente}}" onChange="{{edNome}}" placeholder="Nome do cliente" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px">
+                  <label for="ecTel" style="font-size: 12px; color: #A1A1AA">WhatsApp do cliente</label>
+                  <input id="ecTel" type="tel" inputMode="tel" value="{{edCli.tel}}" onChange="{{edTel}}" placeholder="(00) 00000-0000" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px">
+                  <label for="ecPlaca" style="font-size: 12px; color: #A1A1AA">Placa</label>
+                  <input id="ecPlaca" type="text" value="{{edCli.placa}}" onChange="{{edPlaca}}" placeholder="ABC1D23" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0; text-transform: uppercase">
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+                  <button type="button" onClick="{{edCancelar}}" style="height: 44px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-weight: 500">Cancelar</button>
+                  <button type="button" onClick="{{edSalvar}}" style="height: 44px; border-radius: 10px; border: 0; background: #FFC107; color: #18181B; font-weight: 700">Salvar</button>
+                </div>
+              </div>
+            </sc-if>
             <div style="display: flex; gap: 4px" aria-hidden="true">
               <sc-for list="{{h.steps}}" as="st" hint-placeholder-count="5">
                 <span style="{{st.style}}"></span>
@@ -1210,9 +1236,28 @@ class Component extends DCLogic {
         steps: this.statuses.map((x, i) => ({ style: 'flex: 1; height: 4px; border-radius: 2px; background: ' + (i <= h.status ? '#FFC107' : '#52525B') })),
         canAdvance: true, hasNext: h.status < 2, nextLabel: this.nextLabels[h.status] || '', isReady: h.status === 2,
         advance: () => this.advance(h.id),
+        telTxt: h.tel && String(h.tel).trim() ? 'WhatsApp: ' + h.tel : 'Sem WhatsApp cadastrado',
+        editando: s.editOs === h.id, naoEditando: s.editOs !== h.id,
+        editar: () => this.setState({ editOs: h.id, edCli: { cliente: h.cliente === 'Cliente sem nome' ? '' : h.cliente, tel: h.tel || '', placa: h.placa === 'SEM PLACA' ? '' : h.placa } }),
         avisar: () => this.openWa(h.tel, 'Olá' + (h.cliente && h.cliente.charAt(0) !== '[' && h.cliente !== 'Cliente sem nome' ? ', ' + h.cliente.split(/\s+/)[0] : '') + '! Sua ' + h.moto + ' está pronta para retirada' + (s.shop.nome.trim() ? ' na ' + s.shop.nome.trim() : '') + '. Total: ' + this.brl(h.total) + '. Qualquer dúvida, é só chamar.')
       })),
 
+      edCli: s.edCli || { cliente: '', tel: '', placa: '' },
+      edNome: (e) => this.setState({ edCli: Object.assign({}, s.edCli, { cliente: e.target.value }) }),
+      edTel: (e) => this.setState({ edCli: Object.assign({}, s.edCli, { tel: e.target.value }) }),
+      edPlaca: (e) => this.setState({ edCli: Object.assign({}, s.edCli, { placa: e.target.value }) }),
+      edCancelar: () => this.setState({ editOs: null }),
+      edSalvar: () => {
+        const d = s.edCli || {};
+        this.setState({
+          history: s.history.map((x) => (x.id === s.editOs ? Object.assign({}, x, {
+            cliente: (d.cliente || '').trim() || 'Cliente sem nome',
+            tel: (d.tel || '').trim(),
+            placa: ((d.placa || '').trim() || 'SEM PLACA').toUpperCase()
+          }) : x)),
+          editOs: null, flash: 'Dados do cliente atualizados.'
+        });
+      },
       bellStock: () => this.setState({ stockLow: true, stockCat: 'Todas' }),
       bellLabel: lowAll.length + ' peças com estoque baixo',
       stockUnits: stockUnits,
