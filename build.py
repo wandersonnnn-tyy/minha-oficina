@@ -29,7 +29,7 @@ IMAGENS = {
 
 # o que fica salvo no celular, por página
 SALVAR = {
-    'index.html': ['history', 'osNum', 'stock', 'shop', 'mecanico', 'fator', 'edits', 'names', 'uid', 'clientes'],
+    'index.html': ['history', 'osNum', 'stock', 'shop', 'mecanico', 'fator', 'edits', 'names', 'uid', 'clientes', 'ocultos'],
 }
 
 MODELO = '''<!doctype html>

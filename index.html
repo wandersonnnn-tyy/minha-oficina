@@ -137,19 +137,53 @@ body { margin: 0; background: #18181B; }
           </sc-for>
         </div>
 
+        <!-- BUSCA E FILTRO DAS ORDENS -->
+        <section style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px">
+          <div style="display: flex; gap: 8px">
+            <label style="flex: 1; display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 6px 0 14px; background: #27272A; border: 1px solid #3F3F46; border-radius: 12px; color: #A1A1AA; min-width: 0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex-shrink: 0"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+              <input type="search" aria-label="Buscar ordens" placeholder="Placa, moto, cliente, peça…" value="{{osBusca}}" onChange="{{setOsBusca}}" style="flex: 1; min-width: 0; height: 44px; background: transparent; border: 0; color: #FFFFFF; outline: none">
+              <sc-if value="{{temBusca}}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{limparBusca}}" aria-label="Limpar busca" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; border: 0; background: #3F3F46; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              </sc-if>
+            </label>
+            <button type="button" onClick="{{toggleFiltro}}" aria-expanded="{{filtroExpandido}}" aria-label="{{filtroAria}}" style="{{filtroBtnStyle}}">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"></path></svg>
+              <sc-if value="{{filtroAtivo}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -5px; right: -5px; min-width: 18px; height: 18px; padding: 0 4px; box-sizing: border-box; border-radius: 9px; background: #FFC107; color: #18181B; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{filtroCount}}</span></sc-if>
+            </button>
+          </div>
+
+          <sc-if value="{{filtroAberto}}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 4px; padding: 12px; background: #18181B; border: 1.5px solid #FFC107; border-radius: 14px">
+              <span style="font-size: 12px; color: #A1A1AA; padding: 0 4px 4px">Mostrar ordens que estão em:</span>
+              <sc-for list="{{filtroOpts}}" as="fo" hint-placeholder-count="5">
+                <label style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 6px; border-radius: 10px; cursor: pointer">
+                  <input type="checkbox" checked="{{fo.checked}}" onChange="{{fo.toggle}}" style="width: 22px; height: 22px; accent-color: #FFC107; margin: 0; flex-shrink: 0">
+                  <span style="{{fo.dot}}"></span>
+                  <span style="flex: 1; font-size: 14px">{{fo.label}}</span>
+                  <span style="font-size: 12px; color: #A1A1AA">{{fo.qtd}}</span>
+                </label>
+              </sc-for>
+              <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 6px">
+                <button type="button" onClick="{{mostrarTodosStatus}}" style="height: 42px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-size: 13px">Mostrar todas</button>
+                <button type="button" onClick="{{toggleFiltro}}" style="height: 42px; border-radius: 10px; border: 0; background: #FFC107; color: #18181B; font-weight: 700; font-size: 13px">Pronto</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{temBusca}}" hint-placeholder-val="{{ false }}">
+            <span role="status" style="font-size: 12px; color: #A1A1AA">{{resultadosTxt}}</span>
+          </sc-if>
+        </section>
+
         <!-- ORDENS EM ABERTO -->
-        <section style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px">
+        <section style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px">
           <div style="display: flex; justify-content: space-between; align-items: baseline">
             <h2 style="margin: 0; font-weight: 600; font-size: 16px">Em aberto</h2>
             <span style="font-size: 12px; color: #A1A1AA">{{abertasTxt}}</span>
           </div>
-          <div style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px">
-            <sc-for list="{{filtrosAbertas}}" as="f" hint-placeholder-count="5">
-              <button type="button" onClick="{{f.pick}}" aria-pressed="{{f.selected}}" style="{{f.style}}">{{f.label}}</button>
-            </sc-for>
-          </div>
           <sc-if value="{{semAbertas}}" hint-placeholder-val="{{ false }}">
-            <span style="padding: 18px; background: #27272A; border-radius: 12px; color: #A1A1AA; text-align: center; font-size: 13px">Nenhuma ordem em aberto aqui.</span>
+            <span style="padding: 18px; background: #27272A; border-radius: 12px; color: #A1A1AA; text-align: center; font-size: 13px">{{semAbertasTxt}}</span>
           </sc-if>
           <sc-for list="{{abertas}}" as="h" hint-placeholder-count="3">
             <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #27272A; border: 1px solid #3F3F46; border-radius: 14px">
@@ -230,7 +264,7 @@ body { margin: 0; background: #18181B; }
             <span style="font-size: 12px; color: #A1A1AA">{{pagasTxt}}</span>
           </div>
           <sc-if value="{{semPagas}}" hint-placeholder-val="{{ false }}">
-            <span style="padding: 14px; background: #27272A; border-radius: 12px; color: #A1A1AA; text-align: center; font-size: 13px">Os orçamentos pagos aparecem aqui.</span>
+            <span style="padding: 14px; background: #27272A; border-radius: 12px; color: #A1A1AA; text-align: center; font-size: 13px">{{semPagasTxt}}</span>
           </sc-if>
           <sc-for list="{{pagas}}" as="h" hint-placeholder-count="2">
             <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #1F1F23; border: 1px solid #3F3F46; border-radius: 12px">
@@ -819,7 +853,7 @@ class Component extends DCLogic {
         { id: 'c2', nome: 'Cliente exemplo 2', tel: '', placas: [] },
         { id: 'c3', nome: 'Cliente exemplo 3', tel: '', placas: [] }
       ],
-      pagasTodas: false, cliBusca: '', cliId: null, novoCliAberto: false, novoCli: { nome: '', tel: '', placa: '' }, cliEdit: false, cliDel: false, cliDraft: { nome: '', tel: '' },
+      pagasTodas: false, osBusca: '', ocultos: [], filtroAberto: false, cliBusca: '', cliId: null, novoCliAberto: false, novoCli: { nome: '', tel: '', placa: '' }, cliEdit: false, cliDel: false, cliDraft: { nome: '', tel: '' },
       osNum: 3, osFilter: -1, deckIdx: 0, deckFilter: -1, busca: '', flash: '',
       stockBusca: '', stockCat: 'Todas', stockLow: false,
       stock: [
@@ -1301,9 +1335,29 @@ class Component extends DCLogic {
     const fichaCli = (s.clientes || []).find((c) => c.id === s.cliId) || null;
     const ordemMenos = (a, b) => String(b.num).localeCompare(String(a.num));
     const abertasTodas = s.history.filter((h) => h.status < 4).sort(ordemMenos);
-    const abertasVis = abertasTodas.filter((h) => s.osFilter === -1 || s.osFilter === undefined || h.status === s.osFilter);
+    // busca: cada palavra digitada precisa aparecer em algum campo da ordem (vale pedaço de palavra)
+    const semAcento = (t) => String(t == null ? '' : t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const soLetraNum = (t) => t.replace(/[^a-z0-9]/g, '');
+    const termos = semAcento(s.osBusca).split(/\s+/).filter(Boolean);
+    const textoDaOS = (h) => {
+      return semAcento([
+        'os ' + h.num, h.num, h.placa, h.cliente, h.tel, this.digitos(h.tel), h.moto, h.rev, h.data, h.pag,
+        this.statuses[h.status], this.statusShort[h.status],
+        (h.itemsFull || []).map((it) => it.name).join(' '), (h.items || []).join(' '),
+        h.total != null ? this.brl(h.total) + ' ' + Math.round(h.total) : ''
+      ].join(' | '));
+    };
+    const casaBusca = (h) => {
+      if (!termos.length) return true;
+      const txt = textoDaOS(h);
+      const txtAl = soLetraNum(txt);
+      return termos.every((t) => txt.indexOf(t) !== -1 || (soLetraNum(t).length >= 2 && txtAl.indexOf(soLetraNum(t)) !== -1));
+    };
+    const ocultos = s.ocultos || [];
+    const abertasVis = abertasTodas.filter((h) => ocultos.indexOf(h.status) === -1 && casaBusca(h));
     const pagasTodas = s.history.filter((h) => h.status === 4);
-    const pagasVis = s.pagasTodas ? pagasTodas : pagasTodas.slice(0, 5);
+    const pagasFiltradas = pagasTodas.filter((h) => ocultos.indexOf(4) === -1 && casaBusca(h)).sort(ordemMenos);
+    const pagasVis = s.pagasTodas || termos.length ? pagasFiltradas : pagasFiltradas.slice(0, 5);
     const cb = String(s.cliBusca || '').trim().toLowerCase();
     const cbDig = this.digitos(cb);
     const clientesVis = (s.clientes || []).filter((c) => !cb || this.normNome(c.nome).indexOf(cb) !== -1 || (cbDig && this.digitos(c.tel).indexOf(cbDig) !== -1) || (c.placas || []).some((pl) => pl.toLowerCase().indexOf(cb.replace(/[^a-z0-9]/g, '')) !== -1)).sort((a, b) => a.nome.localeCompare(b.nome));
@@ -1521,20 +1575,37 @@ class Component extends DCLogic {
         });
       },
 
-      abertasTxt: abertasTodas.length + (abertasTodas.length === 1 ? ' ordem' : ' ordens'),
-      filtrosAbertas: [[-1, 'Todas']].concat([0, 1, 2, 3].map((i) => [i, this.statusShort[i]])).map((f) => ({
-        label: f[1] + ' · ' + abertasTodas.filter((h) => f[0] === -1 || h.status === f[0]).length,
-        selected: f[0] === s.osFilter ? 'true' : 'false',
-        pick: () => this.setState({ osFilter: f[0] }),
-        style: 'height: 34px; padding: 0 12px; border-radius: 17px; border: 0; font-size: 12px; white-space: nowrap; flex-shrink: 0; ' + (f[0] === s.osFilter ? 'background: #FFC107; color: #18181B; font-weight: 600' : 'background: #27272A; color: #FFFFFF')
+      abertasTxt: (abertasVis.length !== abertasTodas.length ? abertasVis.length + ' de ' : '') + abertasTodas.length + (abertasTodas.length === 1 ? ' ordem' : ' ordens'),
+      osBusca: s.osBusca || '',
+      setOsBusca: (e) => this.setState({ osBusca: e.target.value }),
+      temBusca: termos.length > 0,
+      limparBusca: () => this.setState({ osBusca: '' }),
+      resultadosTxt: (abertasVis.length + pagasFiltradas.length) + ((abertasVis.length + pagasFiltradas.length) === 1 ? ' ordem encontrada' : ' ordens encontradas') + ' para "' + String(s.osBusca || '').trim() + '"',
+      filtroAberto: !!s.filtroAberto, filtroExpandido: s.filtroAberto ? 'true' : 'false',
+      filtroAtivo: ocultos.length > 0, filtroCount: ocultos.length,
+      filtroAria: ocultos.length ? 'Filtro: ' + ocultos.length + ' etapa(s) escondida(s)' : 'Filtrar por etapa',
+      filtroBtnStyle: 'position: relative; width: 46px; height: 46px; flex-shrink: 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; ' + (s.filtroAberto || ocultos.length ? 'background: #3A2F0B; border: 1.5px solid #FFC107; color: #FFC107' : 'background: #27272A; border: 1px solid #3F3F46; color: #FFFFFF'),
+      toggleFiltro: () => this.setState({ filtroAberto: !this.state.filtroAberto }),
+      mostrarTodosStatus: () => this.setState({ ocultos: [] }),
+      filtroOpts: this.statuses.map((nome, i) => ({
+        label: i === 4 ? 'Pago (histórico)' : nome,
+        qtd: s.history.filter((h) => h.status === i).length,
+        checked: ocultos.indexOf(i) === -1,
+        dot: 'width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background: ' + this.statusColors[i][2],
+        toggle: () => {
+          const atual = this.state.ocultos || [];
+          this.setState({ ocultos: atual.indexOf(i) === -1 ? atual.concat([i]) : atual.filter((x) => x !== i) });
+        }
       })),
+      semAbertasTxt: termos.length ? 'Nada em aberto com essa busca.' : ocultos.length ? 'Nenhuma ordem nas etapas que você deixou visíveis.' : 'Nenhuma ordem em aberto.',
+      semPagasTxt: ocultos.indexOf(4) !== -1 ? 'Pagos escondidos pelo filtro.' : termos.length ? 'Nenhum pago com essa busca.' : 'Os orçamentos pagos aparecem aqui.',
       semAbertas: abertasVis.length === 0,
       abertas: abertasVis.map((h) => this.cartaoOS(h)),
       pagasTxt: pagasTodas.length + (pagasTodas.length === 1 ? ' serviço' : ' serviços') + ' · ' + this.brl(pagasTodas.reduce((a, h) => a + h.total, 0)),
-      semPagas: pagasTodas.length === 0,
+      semPagas: pagasFiltradas.length === 0,
       pagas: pagasVis.map((h) => this.cartaoOS(h)),
-      temMaisPagas: pagasTodas.length > 5,
-      verPagasTxt: s.pagasTodas ? 'Mostrar menos' : 'Ver todos (' + pagasTodas.length + ')',
+      temMaisPagas: !termos.length && pagasFiltradas.length > 5,
+      verPagasTxt: s.pagasTodas ? 'Mostrar menos' : 'Ver todos (' + pagasFiltradas.length + ')',
       verTodasPagas: () => this.setState({ pagasTodas: !s.pagasTodas }),
 
       cliBusca: s.cliBusca || '', setCliBusca: (e) => this.setState({ cliBusca: e.target.value }),
@@ -1653,7 +1724,7 @@ class Component extends DCLogic {
     };
   }
 }
-DC.mount(Component, document.getElementById('tela'), document.getElementById('app'), { salvarEm: "minhaOficina", campos: ["history", "osNum", "stock", "shop", "mecanico", "fator", "edits", "names", "uid", "clientes"] });
+DC.mount(Component, document.getElementById('tela'), document.getElementById('app'), { salvarEm: "minhaOficina", campos: ["history", "osNum", "stock", "shop", "mecanico", "fator", "edits", "names", "uid", "clientes", "ocultos"] });
 </script>
 <script>
 if ('serviceWorker' in navigator) {
