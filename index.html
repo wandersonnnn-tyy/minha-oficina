@@ -39,16 +39,14 @@ body { margin: 0; background: #18181B; }
   <!-- CABEÇALHO DO INÍCIO -->
   <sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
     <header style="flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 18px 16px 8px">
-      <div style="width: 40px; height: 40px; border-radius: 50%; background: #3F3F46; border: 1px solid #FFC107; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0">{{mecIniciais}}</div>
       <div style="display: flex; flex-direction: column; flex: 1; min-width: 0">
         <span style="font-size: 12px; color: #A1A1AA">{{saudacaoHora}}</span>
-        <span style="font-weight: 600; font-size: 16px">{{tarefasTxt}}</span>
+        <span style="font-weight: 700; font-size: 24px; line-height: 1.15">Orçar</span>
       </div>
       <sc-if value="{{hasLowStock}}" hint-placeholder-val="{{ true }}">
-        <button type="button" onClick="{{navStockBaixo}}" style="display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 17px; border: 0; background: #3B1414; color: #F87171; font-size: 12px; font-weight: 600; flex-shrink: 0">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"></path></svg>{{lowCount}} repor
-        </button>
+        <button type="button" onClick="{{navStockBaixo}}" style="display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 17px; border: 0; background: #3B1414; color: #F87171; font-size: 12px; font-weight: 600; flex-shrink: 0">{{lowCount}} repor</button>
       </sc-if>
+      <div style="width: 40px; height: 40px; border-radius: 50%; background: #3F3F46; border: 1px solid #FFC107; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0">{{mecIniciais}}</div>
     </header>
   </sc-if>
 
@@ -96,51 +94,10 @@ body { margin: 0; background: #18181B; }
       </div>
     </sc-if>
 
-    <!-- INÍCIO: próximo passo -->
+    <!-- INÍCIO: NOVO ORÇAMENTO -->
     <sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
-      <div style="display: flex; flex-direction: column; gap: 16px; min-height: 100%">
-        <section style="display: flex; flex-direction: column; gap: 12px; padding: 18px; background: #27272A; border: 1.5px solid #FFC107; border-radius: 20px">
-          <span style="align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; padding: 4px 10px; border-radius: 10px; background: #FFC107; color: #18181B">PRÓXIMO PASSO</span>
-          <div style="display: flex; flex-direction: column; gap: 2px">
-            <span style="font-weight: 600; font-size: 20px; line-height: 1.25">{{proximo.titulo}}</span>
-            <span style="font-size: 13px; color: #A1A1AA">{{proximo.sub}}</span>
-          </div>
-          <sc-if value="{{proximo.temAcao}}" hint-placeholder-val="{{ true }}">
-            <button type="button" onClick="{{proximo.acao}}" class="dica-brilho" style="{{proximo.estilo}}">
-              <sc-if value="{{proximo.wa}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8.5 8.5 0 1 1 8 19z"></path><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-1.9-1-1 .8a4 4 0 0 1-2.2-2.2l.8-1-1-1.9z"></path></svg></sc-if>
-              {{proximo.rotulo}}
-            </button>
-          </sc-if>
-        </section>
-
-        <sc-if value="{{temDepois}}" hint-placeholder-val="{{ true }}">
-          <section style="display: flex; flex-direction: column">
-            <h2 style="margin: 0 0 10px; font-weight: 600; font-size: 15px">Depois</h2>
-            <sc-for list="{{depois}}" as="t" hint-placeholder-count="3">
-              <div style="display: flex; gap: 14px">
-                <div style="display: flex; flex-direction: column; align-items: center; width: 22px; flex-shrink: 0">
-                  <span style="{{t.dot}}"></span>
-                  <sc-if value="{{t.linha}}" hint-placeholder-val="{{ true }}"><span style="flex: 1; width: 2px; background: #3F3F46"></span></sc-if>
-                </div>
-                <div style="flex: 1; display: flex; flex-direction: column; gap: 6px; padding-bottom: 16px; min-width: 0">
-                  <span style="font-weight: 500">{{t.titulo}}</span>
-                  <span style="font-size: 12px; color: #A1A1AA">{{t.sub}}</span>
-                  <button type="button" onClick="{{t.acao}}" style="align-self: flex-start; height: 38px; padding: 0 14px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-size: 12px; font-weight: 500">{{t.rotulo}}</button>
-                </div>
-              </div>
-            </sc-for>
-          </section>
-        </sc-if>
-
-        <button type="button" onClick="{{novoOrc}}" style="margin-top: auto; flex-shrink: 0; height: 60px; border-radius: 16px; border: 0; background: #FFC107; color: #18181B; font-weight: 700; font-size: 17px; display: flex; align-items: center; justify-content: center; gap: 10px">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Novo orçamento
-        </button>
-      </div>
-    </sc-if>
-
-    <!-- ESCOLHER MOTO -->
-    <sc-if value="{{isBrand}}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 12px">
+        <h2 style="margin: 0; font-weight: 600; font-size: 16px; color: #FFC107">Novo orçamento</h2>
         <section style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #27272A; border-radius: 16px">
           <label for="buscaPlaca" style="font-weight: 600; font-size: 15px">Placa da moto</label>
           <div style="display: flex; flex-direction: column; border-radius: 10px; overflow: hidden; border: 2px solid #3F3F46; background: #FFFFFF">
@@ -167,19 +124,129 @@ body { margin: 0; background: #18181B; }
           </sc-if>
         </section>
 
-        <p style="margin: 0; color: #CFCFCF">Qual a marca da moto?</p>
-        <sc-for list="{{brands}}" as="b" hint-placeholder-count="2">
-          <button type="button" onClick="{{b.pick}}" style="display: flex; align-items: center; gap: 16px; min-height: 116px; padding: 20px; background: #27272A; border: 1px solid #3F3F46; border-radius: 16px; color: #FFFFFF; text-align: left">
-            <img src="{{b.logo}}" alt="" style="width: 72px; height: 72px; object-fit: contain; flex-shrink: 0; display: block">
-            <span style="display: flex; flex-direction: column; flex: 1; min-width: 0">
-              <span style="font-weight: 700; font-size: 28px; line-height: 1.1; letter-spacing: 0.04em; text-transform: uppercase">{{b.name}}</span>
-              <span style="font-size: 13px; color: #A1A1AA">{{b.count}} modelos</span>
-            </span>
-            <span style="width: 44px; height: 44px; border-radius: 50%; background: #FFC107; color: #27272A; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
-            </span>
-          </button>
-        </sc-for>
+        <p style="margin: 0; color: #CFCFCF; font-size: 13px">Ou escolha a marca:</p>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+          <sc-for list="{{brands}}" as="b" hint-placeholder-count="2">
+            <button type="button" onClick="{{b.pick}}" style="display: flex; align-items: center; gap: 10px; height: 72px; padding: 0 12px; background: #27272A; border: 1px solid #3F3F46; border-radius: 16px; color: #FFFFFF; text-align: left">
+              <img src="{{b.logo}}" alt="" style="width: 44px; height: 44px; object-fit: contain; flex-shrink: 0; display: block">
+              <span style="display: flex; flex-direction: column; min-width: 0">
+                <span style="font-weight: 700; font-size: 16px; letter-spacing: 0.04em; text-transform: uppercase">{{b.name}}</span>
+                <span style="font-size: 11px; color: #A1A1AA">{{b.count}} modelos</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+
+        <!-- ORDENS EM ABERTO -->
+        <section style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline">
+            <h2 style="margin: 0; font-weight: 600; font-size: 16px">Em aberto</h2>
+            <span style="font-size: 12px; color: #A1A1AA">{{abertasTxt}}</span>
+          </div>
+          <div style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px">
+            <sc-for list="{{filtrosAbertas}}" as="f" hint-placeholder-count="5">
+              <button type="button" onClick="{{f.pick}}" aria-pressed="{{f.selected}}" style="{{f.style}}">{{f.label}}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{semAbertas}}" hint-placeholder-val="{{ false }}">
+            <span style="padding: 18px; background: #27272A; border-radius: 12px; color: #A1A1AA; text-align: center; font-size: 13px">Nenhuma ordem em aberto aqui.</span>
+          </sc-if>
+          <sc-for list="{{abertas}}" as="h" hint-placeholder-count="3">
+            <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #27272A; border: 1px solid #3F3F46; border-radius: 14px">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+                <span style="display: flex; align-items: baseline; gap: 8px; min-width: 0">
+                  <span style="font-size: 12px; color: #A1A1AA">OS {{h.num}}</span>
+                  <span style="font-weight: 600; font-size: 15px; letter-spacing: 0.06em">{{h.placa}}</span>
+                </span>
+                <span style="{{h.statusStyle}}">{{h.status}}</span>
+              </div>
+              <span style="font-size: 14px">{{h.cliente}} · {{h.moto}}</span>
+              <div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: #A1A1AA">
+                <span>{{h.rev}} · {{h.data}}</span>
+                <span style="font-weight: 700; color: #FFFFFF; font-size: 15px; white-space: nowrap">{{h.totalFmt}}</span>
+              </div>
+              <span style="font-size: 12px; color: #A1A1AA">{{h.telTxt}}</span>
+              <div role="group" aria-label="Mudar a etapa" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px">
+                <sc-for list="{{h.steps}}" as="st" hint-placeholder-count="5">
+                  <button type="button" onClick="{{st.pick}}" aria-pressed="{{st.atual}}" aria-label="{{st.aria}}" style="{{st.style}}">{{st.label}}</button>
+                </sc-for>
+              </div>
+              <div style="display: flex; gap: 8px">
+                <sc-if value="{{h.hasNext}}" hint-placeholder-val="{{ true }}">
+                  <button type="button" onClick="{{h.advance}}" style="flex: 1; height: 44px; background: #FFC107; border: 0; border-radius: 10px; color: #18181B; font-weight: 700; font-size: 14px">{{h.nextLabel}}</button>
+                </sc-if>
+                <sc-if value="{{h.hasWa}}" hint-placeholder-val="{{ false }}">
+                  <button type="button" onClick="{{h.wa}}" style="flex: 1; height: 44px; padding: 0 10px; background: transparent; border: 1.5px solid #22C55E; border-radius: 10px; color: #4ADE80; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8.5 8.5 0 1 1 8 19z"></path></svg>{{h.waLabel}}</button>
+                </sc-if>
+              </div>
+            <sc-if value="{{h.mostraAcoes}}" hint-placeholder-val="{{ true }}">
+                <div style="display: flex; gap: 8px">
+                  <button type="button" onClick="{{h.editar}}" style="display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-size: 12px; font-weight: 500">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg>Editar cliente
+                  </button>
+                  <button type="button" onClick="{{h.pedirApagar}}" style="display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid #7F1D1D; background: transparent; color: #F87171; font-size: 12px; font-weight: 500">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>Apagar
+                  </button>
+                </div>
+              </sc-if>
+              <sc-if value="{{h.apagando}}" hint-placeholder-val="{{ false }}">
+                <div role="alertdialog" aria-label="Confirmar exclusão" style="display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #2A1414; border: 1.5px solid #EF4444; border-radius: 12px">
+                  <span style="font-weight: 600; font-size: 14px">Apagar a OS {{h.num}}?</span>
+                  <span style="font-size: 12px; color: #FCA5A5">O orçamento de {{h.cliente}} ({{h.moto}}) some do app e não dá para recuperar.</span>
+                  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+                    <button type="button" onClick="{{h.cancelarApagar}}" style="height: 44px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-weight: 500">Cancelar</button>
+                    <button type="button" onClick="{{h.apagar}}" style="height: 44px; border-radius: 10px; border: 0; background: #EF4444; color: #FFFFFF; font-weight: 700">Apagar</button>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{h.editando}}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #18181B; border: 1.5px solid #FFC107; border-radius: 12px">
+                  <div style="display: flex; flex-direction: column; gap: 4px">
+                    <label for="ecNome" style="font-size: 12px; color: #A1A1AA">Nome</label>
+                    <input id="ecNome" type="text" value="{{edCli.cliente}}" onChange="{{edNome}}" placeholder="Nome do cliente" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 4px">
+                    <label for="ecTel" style="font-size: 12px; color: #A1A1AA">WhatsApp do cliente</label>
+                    <input id="ecTel" type="tel" inputMode="tel" value="{{edCli.tel}}" onChange="{{edTel}}" placeholder="(00) 00000-0000" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 4px">
+                    <label for="ecPlaca" style="font-size: 12px; color: #A1A1AA">Placa</label>
+                    <input id="ecPlaca" type="text" value="{{edCli.placa}}" onChange="{{edPlaca}}" placeholder="ABC1D23" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0; text-transform: uppercase">
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+                    <button type="button" onClick="{{edCancelar}}" style="height: 44px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-weight: 500">Cancelar</button>
+                    <button type="button" onClick="{{edSalvar}}" style="height: 44px; border-radius: 10px; border: 0; background: #FFC107; color: #18181B; font-weight: 700">Salvar</button>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </section>
+
+        <!-- HISTÓRICO -->
+        <section style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline">
+            <h2 style="margin: 0; font-weight: 600; font-size: 16px">Histórico · pagos</h2>
+            <span style="font-size: 12px; color: #A1A1AA">{{pagasTxt}}</span>
+          </div>
+          <sc-if value="{{semPagas}}" hint-placeholder-val="{{ false }}">
+            <span style="padding: 14px; background: #27272A; border-radius: 12px; color: #A1A1AA; text-align: center; font-size: 13px">Os orçamentos pagos aparecem aqui.</span>
+          </sc-if>
+          <sc-for list="{{pagas}}" as="h" hint-placeholder-count="2">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #1F1F23; border: 1px solid #3F3F46; border-radius: 12px">
+              <span style="width: 28px; height: 28px; border-radius: 50%; background: #0F2E1C; color: #4ADE80; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span>
+              <span style="display: flex; flex-direction: column; flex: 1; min-width: 0">
+                <span style="font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{h.moto}} · {{h.cliente}}</span>
+                <span style="font-size: 11px; color: #A1A1AA">OS {{h.num}} · {{h.data}} · {{h.rev}}</span>
+              </span>
+              <span style="font-weight: 600; font-size: 13px; white-space: nowrap">{{h.totalFmt}}</span>
+              <button type="button" onClick="{{h.reabrir}}" aria-label="Reabrir esta ordem" style="height: 36px; padding: 0 10px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #CFCFCF; font-size: 11px">Reabrir</button>
+            </div>
+          </sc-for>
+          <sc-if value="{{temMaisPagas}}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{verTodasPagas}}" style="height: 40px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-size: 13px">{{verPagasTxt}}</button>
+          </sc-if>
+        </section>
       </div>
     </sc-if>
 
@@ -430,95 +497,137 @@ body { margin: 0; background: #18181B; }
       </div>
     </sc-if>
 
-    <!-- ORDENS -->
-    <sc-if value="{{isOs}}" hint-placeholder-val="{{ false }}">
+    <!-- CLIENTES -->
+    <sc-if value="{{isClientes}}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 12px">
-        <label style="display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; background: #27272A; border: 1px solid #3F3F46; border-radius: 12px; color: #A1A1AA">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
-          <input type="search" aria-label="Buscar por placa ou cliente" placeholder="Buscar placa ou cliente..." value="{{busca}}" onChange="{{setBusca}}" style="flex: 1; min-width: 0; height: 44px; background: transparent; border: 0; color: #FFFFFF; outline: none">
-        </label>
-        <div style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px">
-          <sc-for list="{{osFilters}}" as="f" hint-placeholder-count="6">
-            <button type="button" onClick="{{f.pick}}" aria-pressed="{{f.selected}}" style="{{f.style}}">{{f.label}}</button>
-          </sc-for>
+        <div style="display: flex; gap: 8px">
+          <label style="flex: 1; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; background: #27272A; border: 1px solid #3F3F46; border-radius: 12px; color: #A1A1AA; min-width: 0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+            <input type="search" aria-label="Buscar cliente" placeholder="Nome, WhatsApp ou placa" value="{{cliBusca}}" onChange="{{setCliBusca}}" style="flex: 1; min-width: 0; height: 44px; background: transparent; border: 0; color: #FFFFFF; outline: none">
+          </label>
+          <button type="button" onClick="{{abrirNovoCli}}" aria-label="Novo cliente" style="width: 46px; height: 46px; flex-shrink: 0; background: #FFC107; border: 0; border-radius: 12px; color: #18181B; display: flex; align-items: center; justify-content: center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          </button>
         </div>
-        <sc-if value="{{osEmpty}}" hint-placeholder-val="{{ false }}">
-          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 36px 16px; text-align: center; color: #A1A1AA; background: #27272A; border-radius: 12px">
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"></path><path d="M9 11h7M9 15h7M9 7h3"></path></svg>
-            <span style="font-weight: 600; color: #FFFFFF">Nenhuma ordem aqui</span>
-            <span style="font-size: 13px">Cada orçamento salvo vira uma OS.</span>
+
+        <sc-if value="{{mostrandoNovoCli}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #18181B; border: 1.5px solid #FFC107; border-radius: 14px">
+            <span style="font-weight: 600">Novo cliente</span>
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <label for="ncNome" style="font-size: 12px; color: #A1A1AA">Nome</label>
+              <input id="ncNome" type="text" value="{{novoCli.nome}}" onChange="{{ncNome}}" placeholder="Nome do cliente" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <label for="ncTel" style="font-size: 12px; color: #A1A1AA">WhatsApp</label>
+              <input id="ncTel" type="tel" inputMode="tel" value="{{novoCli.tel}}" onChange="{{ncTel}}" placeholder="(00) 00000-0000" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <label for="ncPlaca" style="font-size: 12px; color: #A1A1AA">Placa da moto (opcional)</label>
+              <input id="ncPlaca" type="text" value="{{novoCli.placa}}" onChange="{{ncPlaca}}" placeholder="ABC1D23" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0; text-transform: uppercase">
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+              <button type="button" onClick="{{fecharNovoCli}}" style="height: 44px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-weight: 500">Cancelar</button>
+              <button type="button" onClick="{{salvarNovoCli}}" style="height: 44px; border-radius: 10px; border: 0; background: #FFC107; color: #18181B; font-weight: 700">Salvar</button>
+            </div>
           </div>
         </sc-if>
-        <sc-for list="{{osList}}" as="h" hint-placeholder-count="3">
-          <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #27272A; border: 1px solid #3F3F46; border-radius: 12px">
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
-              <span style="display: flex; align-items: baseline; gap: 8px">
-                <span style="font-size: 12px; color: #A1A1AA">OS {{h.num}}</span>
-                <span style="font-weight: 600; font-size: 16px; letter-spacing: 0.06em">{{h.placa}}</span>
-              </span>
-              <span style="{{h.statusStyle}}">{{h.status}}</span>
-            </div>
-            <span style="font-size: 14px">{{h.cliente}} · {{h.moto}}</span>
-            <span style="font-size: 12px; color: #A1A1AA">{{h.telTxt}}</span>
-            <sc-if value="{{h.mostraAcoes}}" hint-placeholder-val="{{ true }}">
-              <div style="display: flex; gap: 8px">
-                <button type="button" onClick="{{h.editar}}" style="display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-size: 12px; font-weight: 500">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg>Editar cliente
-                </button>
-                <button type="button" onClick="{{h.pedirApagar}}" style="display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid #7F1D1D; background: transparent; color: #F87171; font-size: 12px; font-weight: 500">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>Apagar
-                </button>
-              </div>
-            </sc-if>
-            <sc-if value="{{h.apagando}}" hint-placeholder-val="{{ false }}">
-              <div role="alertdialog" aria-label="Confirmar exclusão" style="display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #2A1414; border: 1.5px solid #EF4444; border-radius: 12px">
-                <span style="font-weight: 600; font-size: 14px">Apagar a OS {{h.num}}?</span>
-                <span style="font-size: 12px; color: #FCA5A5">O orçamento de {{h.cliente}} ({{h.moto}}) some do app e não dá para recuperar.</span>
-                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
-                  <button type="button" onClick="{{h.cancelarApagar}}" style="height: 44px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-weight: 500">Cancelar</button>
-                  <button type="button" onClick="{{h.apagar}}" style="height: 44px; border-radius: 10px; border: 0; background: #EF4444; color: #FFFFFF; font-weight: 700">Apagar</button>
-                </div>
-              </div>
-            </sc-if>
-            <sc-if value="{{h.editando}}" hint-placeholder-val="{{ false }}">
-              <div style="display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #18181B; border: 1.5px solid #FFC107; border-radius: 12px">
-                <div style="display: flex; flex-direction: column; gap: 4px">
-                  <label for="ecNome" style="font-size: 12px; color: #A1A1AA">Nome</label>
-                  <input id="ecNome" type="text" value="{{edCli.cliente}}" onChange="{{edNome}}" placeholder="Nome do cliente" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 4px">
-                  <label for="ecTel" style="font-size: 12px; color: #A1A1AA">WhatsApp do cliente</label>
-                  <input id="ecTel" type="tel" inputMode="tel" value="{{edCli.tel}}" onChange="{{edTel}}" placeholder="(00) 00000-0000" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 4px">
-                  <label for="ecPlaca" style="font-size: 12px; color: #A1A1AA">Placa</label>
-                  <input id="ecPlaca" type="text" value="{{edCli.placa}}" onChange="{{edPlaca}}" placeholder="ABC1D23" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0; text-transform: uppercase">
-                </div>
-                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
-                  <button type="button" onClick="{{edCancelar}}" style="height: 44px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-weight: 500">Cancelar</button>
-                  <button type="button" onClick="{{edSalvar}}" style="height: 44px; border-radius: 10px; border: 0; background: #FFC107; color: #18181B; font-weight: 700">Salvar</button>
-                </div>
-              </div>
-            </sc-if>
-            <div style="display: flex; gap: 4px" aria-hidden="true">
-              <sc-for list="{{h.steps}}" as="st" hint-placeholder-count="5">
-                <span style="{{st.style}}"></span>
-              </sc-for>
-            </div>
-            <div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: #A1A1AA">
-              <span>{{h.rev}} · {{h.data}} · {{h.mecanico}}{{h.fotosTxt}}</span>
-              <span style="font-weight: 600; color: #FFFFFF; font-size: 14px; white-space: nowrap">{{h.totalFmt}}</span>
-            </div>
-            <sc-if value="{{h.canAdvance}}" hint-placeholder-val="{{ true }}">
-              <div style="display: flex; gap: 8px">
-                <sc-if value="{{h.hasNext}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{h.advance}}" style="flex: 1; height: 44px; background: #FFC107; border: 0; border-radius: 10px; color: #27272A; font-weight: 600; font-size: 14px">{{h.nextLabel}}</button></sc-if>
-                <sc-if value="{{h.isReady}}" hint-placeholder-val="{{ false }}">
-                  <button type="button" onClick="{{h.avisar}}" style="flex: 1; height: 44px; padding: 0 12px; background: transparent; border: 1.5px solid #22C55E; border-radius: 10px; color: #4ADE80; font-weight: 500; font-size: 13px">Avisar no WhatsApp</button>
-                </sc-if>
-              </div>
-            </sc-if>
-          </div>
+
+        <span style="font-size: 12px; color: #A1A1AA">{{clientesTxt}}</span>
+        <sc-if value="{{semClientes}}" hint-placeholder-val="{{ false }}">
+          <span style="padding: 18px; background: #27272A; border-radius: 12px; color: #A1A1AA; text-align: center; font-size: 13px">Nenhum cliente encontrado.</span>
+        </sc-if>
+        <sc-for list="{{clientesLista}}" as="c" hint-placeholder-count="4">
+          <button type="button" onClick="{{c.abrir}}" style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #27272A; border: 1px solid #3F3F46; border-radius: 14px; color: #FFFFFF; text-align: left">
+            <span style="width: 44px; height: 44px; border-radius: 50%; background: #3F3F46; color: #FFC107; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0">{{c.iniciais}}</span>
+            <span style="display: flex; flex-direction: column; flex: 1; min-width: 0">
+              <span style="font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.nome}}</span>
+              <span style="font-size: 12px; color: #A1A1AA">{{c.tel}}</span>
+              <span style="font-size: 12px; color: #CFCFCF">{{c.resumo}}</span>
+            </span>
+            <sc-if value="{{c.temAbertas}}" hint-placeholder-val="{{ false }}"><span style="min-width: 22px; height: 22px; padding: 0 6px; box-sizing: border-box; border-radius: 11px; background: #FFC107; color: #18181B; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{c.abertas}}</span></sc-if>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+          </button>
         </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- FICHA DO CLIENTE -->
+    <sc-if value="{{isCliente}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <sc-if value="{{cliNaoEditando}}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 18px; background: #27272A; border-radius: 16px; text-align: center">
+            <span style="width: 64px; height: 64px; border-radius: 50%; background: #3F3F46; color: #FFC107; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 22px">{{ficha.iniciais}}</span>
+            <span style="font-weight: 700; font-size: 20px">{{ficha.nome}}</span>
+            <span style="font-size: 13px; color: #A1A1AA">{{ficha.tel}}</span>
+            <span style="font-size: 12px; color: #CFCFCF">{{ficha.placas}}</span>
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%; margin-top: 6px">
+              <button type="button" onClick="{{ficha.orcar}}" style="height: 46px; border-radius: 12px; border: 0; background: #FFC107; color: #18181B; font-weight: 700; font-size: 14px">Novo orçamento</button>
+              <button type="button" onClick="{{ficha.wa}}" style="height: 46px; border-radius: 12px; border: 1.5px solid #22C55E; background: transparent; color: #4ADE80; font-weight: 600; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8.5 8.5 0 1 1 8 19z"></path></svg>WhatsApp</button>
+            </div>
+            <div style="display: flex; gap: 8px">
+              <button type="button" onClick="{{ficha.editar}}" style="height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-size: 12px">Editar contato</button>
+              <button type="button" onClick="{{ficha.pedirExcluir}}" style="height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid #7F1D1D; background: transparent; color: #F87171; font-size: 12px">Excluir contato</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{cliEditando}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #18181B; border: 1.5px solid #FFC107; border-radius: 14px">
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <label for="ecfNome" style="font-size: 12px; color: #A1A1AA">Nome</label>
+              <input id="ecfNome" type="text" value="{{cliDraft.nome}}" onChange="{{cdNome}}" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <label for="ecfTel" style="font-size: 12px; color: #A1A1AA">WhatsApp</label>
+              <input id="ecfTel" type="tel" inputMode="tel" value="{{cliDraft.tel}}" onChange="{{cdTel}}" style="height: 44px; padding: 0 12px; background: #3F3F46; border: 1px solid #52525B; border-radius: 10px; color: #FFFFFF; min-width: 0">
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+              <button type="button" onClick="{{cdCancelar}}" style="height: 44px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-weight: 500">Cancelar</button>
+              <button type="button" onClick="{{cdSalvar}}" style="height: 44px; border-radius: 10px; border: 0; background: #FFC107; color: #18181B; font-weight: 700">Salvar</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{cliExcluindo}}" hint-placeholder-val="{{ false }}">
+          <div role="alertdialog" aria-label="Confirmar exclusão do contato" style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #2A1414; border: 1.5px solid #EF4444; border-radius: 14px">
+            <span style="font-weight: 600">Excluir {{ficha.nome}} dos contatos?</span>
+            <span style="font-size: 12px; color: #FCA5A5">Os orçamentos dele continuam no app, só o contato sai da lista.</span>
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+              <button type="button" onClick="{{ficha.cancelarExcluir}}" style="height: 44px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF">Cancelar</button>
+              <button type="button" onClick="{{ficha.excluir}}" style="height: 44px; border-radius: 10px; border: 0; background: #EF4444; color: #FFFFFF; font-weight: 700">Excluir</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <section style="display: flex; flex-direction: column; gap: 8px">
+          <h2 style="margin: 0; font-weight: 600; font-size: 15px">Em aberto · {{ficha.nAbertas}}</h2>
+          <sc-if value="{{ficha.semAbertas}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #A1A1AA">Nada em aberto.</span></sc-if>
+          <sc-for list="{{ficha.abertas}}" as="o" hint-placeholder-count="1">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 12px; background: #27272A; border-radius: 12px">
+              <span style="display: flex; flex-direction: column; flex: 1; min-width: 0">
+                <span style="font-size: 14px; font-weight: 500">{{o.moto}}</span>
+                <span style="font-size: 12px; color: #A1A1AA">OS {{o.num}} · {{o.data}} · {{o.rev}}</span>
+              </span>
+              <span style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px">
+                <span style="{{o.statusStyle}}">{{o.status}}</span>
+                <span style="font-weight: 600; font-size: 13px">{{o.totalFmt}}</span>
+              </span>
+            </div>
+          </sc-for>
+        </section>
+        <section style="display: flex; flex-direction: column; gap: 8px">
+          <h2 style="margin: 0; font-weight: 600; font-size: 15px">Concluídos · {{ficha.nPagas}}</h2>
+          <sc-if value="{{ficha.semPagas}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #A1A1AA">Nenhum serviço pago ainda.</span></sc-if>
+          <sc-for list="{{ficha.pagas}}" as="o" hint-placeholder-count="1">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #1F1F23; border: 1px solid #3F3F46; border-radius: 12px">
+              <span style="display: flex; flex-direction: column; flex: 1; min-width: 0">
+                <span style="font-size: 13px">{{o.moto}}</span>
+                <span style="font-size: 11px; color: #A1A1AA">OS {{o.num}} · {{o.data}} · {{o.rev}}</span>
+              </span>
+              <span style="font-weight: 600; font-size: 13px">{{o.totalFmt}}</span>
+            </div>
+          </sc-for>
+        </section>
       </div>
     </sc-if>
 
@@ -669,12 +778,12 @@ body { margin: 0; background: #18181B; }
   <sc-if value="{{showNav}}" hint-placeholder-val="{{ true }}">
     <nav aria-label="Menu principal" style="flex-shrink: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 4px 4px 10px; background: #27272A; border-top: 1px solid #3F3F46">
       <button type="button" onClick="{{navHome}}" style="{{navHomeStyle}}">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
-        Hoje
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"></path><path d="M12 10v6M9 13h6"></path></svg>
+        Orçar
       </button>
-      <button type="button" onClick="{{navOs}}" style="{{navOsStyle}}">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"></path><path d="M9 11h7M9 15h7M9 7h3"></path></svg>
-        Ordens
+      <button type="button" onClick="{{navCli}}" style="{{navCliStyle}}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.7-3.6 3.3-5.5 6.5-5.5s5.8 1.9 6.5 5.5"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c2 .7 3.2 2.5 3.6 5.2"></path></svg>
+        Clientes
       </button>
       <button type="button" onClick="{{navStock}}" style="{{navStockStyle}}; position: relative">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"></path><path d="M3 8l9 5 9-5M12 13v8"></path></svg>
@@ -700,10 +809,17 @@ class Component extends DCLogic {
       shop: { nome: '', tel: '', cnpj: '', end: '', logo: '', logoW: 0, logoH: 0 }, lastId: null, pdfMsg: '', mecanico: '', fator: '1,3', validade: '7',
       // atendimentos de exemplo para o protótipo
       history: [
-        { id: 'os3', modelId: 'cg160titan', num: '0003', placa: '[PLACA]', cliente: '[Cliente]', moto: 'Honda CG 160', rev: 'Troca de óleo + filtro', data: hoje, hora: '10:24', mecanico: 'Mecânico', status: 1, parts: 70, labor: 25, total: 95, items: ['Troca de óleo do motor', 'Filtro de óleo'], fotos: 0 },
-        { id: 'os2', modelId: 'fz25', num: '0002', placa: '[PLACA]', cliente: '[Cliente]', moto: 'Yamaha Fazer 250', rev: 'Revisão completa', data: hoje, hora: '09:12', mecanico: 'Mecânico', status: 0, parts: 182, labor: 162, total: 344, items: [], fotos: 0 },
-        { id: 'os1', modelId: 'biz125', num: '0001', placa: '[PLACA]', cliente: '[Cliente]', moto: 'Honda Biz 125', rev: 'Ajuste de freios', data: 'Ontem', hora: 'Ontem', mecanico: 'Mecânico', status: 2, parts: 0, labor: 40, total: 40, items: [], fotos: 0 }
+        { id: 'os3', sv: 2, clienteId: 'c1', modelId: 'cg160titan', num: '0003', placa: '[PLACA]', cliente: 'Cliente exemplo 1', moto: 'Honda CG 160', rev: 'Troca de óleo + filtro', data: hoje, hora: '10:24', mecanico: 'Mecânico', status: 2, parts: 70, labor: 25, total: 95, items: ['Troca de óleo do motor', 'Filtro de óleo'], fotos: 0 },
+        { id: 'os2', sv: 2, clienteId: 'c2', modelId: 'fz25', num: '0002', placa: '[PLACA]', cliente: 'Cliente exemplo 2', moto: 'Yamaha Fazer 250', rev: 'Revisão completa', data: hoje, hora: '09:12', mecanico: 'Mecânico', status: 0, parts: 182, labor: 162, total: 344, items: [], fotos: 0 },
+        { id: 'os1', sv: 2, clienteId: 'c3', modelId: 'biz125', num: '0001', placa: '[PLACA]', cliente: 'Cliente exemplo 3', moto: 'Honda Biz 125', rev: 'Ajuste de freios', data: 'Ontem', hora: 'Ontem', mecanico: 'Mecânico', status: 3, parts: 0, labor: 40, total: 40, items: [], fotos: 0 },
+        { id: 'os0', sv: 2, clienteId: 'c1', modelId: 'cg160titan', num: '0000', placa: '[PLACA]', cliente: 'Cliente exemplo 1', moto: 'Honda CG 160', rev: 'Revisão geral', data: 'Semana passada', hora: '', mecanico: 'Mecânico', status: 4, parts: 130, labor: 125, total: 255, items: [], fotos: 0 }
       ],
+      clientes: [
+        { id: 'c1', nome: 'Cliente exemplo 1', tel: '', placas: [] },
+        { id: 'c2', nome: 'Cliente exemplo 2', tel: '', placas: [] },
+        { id: 'c3', nome: 'Cliente exemplo 3', tel: '', placas: [] }
+      ],
+      pagasTodas: false, cliBusca: '', cliId: null, novoCliAberto: false, novoCli: { nome: '', tel: '', placa: '' }, cliEdit: false, cliDel: false, cliDraft: { nome: '', tel: '' },
       osNum: 3, osFilter: -1, deckIdx: 0, deckFilter: -1, busca: '', flash: '',
       stockBusca: '', stockCat: 'Todas', stockLow: false,
       stock: [
@@ -735,10 +851,11 @@ class Component extends DCLogic {
     this.revs = [['geral', 'Geral', 'Revisão geral'], ['dianteira', 'Dianteira', 'Revisão dianteira'], ['traseira', 'Traseira', 'Revisão traseira'], ['especifico', 'Específico', 'Serviço específico']];
     this.sugestoes = [['Pneu dianteiro', 180, 30], ['Pneu traseiro', 220, 30], ['Kit relação', 180, 50], ['Kit embreagem', 120, 80], ['Bateria', 180, 10], ['Cabo de embreagem', 30, 25], ['Lâmpada do farol', 25, 10], ['Limpeza de bicos injetores', 0, 90], ['Retífica de disco de freio', 0, 70]];
     this.payOpts = [['pix', 'Pix'], ['dinheiro', 'Dinheiro'], ['debito', 'Débito'], ['credito', 'Crédito']];
-    this.statuses = ['Aguardando aprovação', 'Em serviço', 'Pronta p/ retirar'];
-    this.statusShort = ['Aguardando', 'Em serviço', 'Pronta'];
-    this.nextLabels = ['Iniciar serviço', 'Marcar como pronta'];
-    this.statusColors = [['#3A2F0B', '#FFC107', '#FFC107'], ['#0C2A44', '#60A5FA', '#3B82F6'], ['#0F2E1C', '#4ADE80', '#22C55E']];
+    this.statuses = ['Aguardando aprovação', 'Aprovado', 'Em serviço', 'Pronta', 'Pago'];
+    this.statusShort = ['Aguardando', 'Aprovado', 'Em serviço', 'Pronta', 'Pago'];
+    this.statusMini = ['Aguard.', 'Aprov.', 'Serviço', 'Pronta', 'Pago'];
+    this.nextLabels = ['Cliente aprovou', 'Iniciar serviço', 'Marcar pronta', 'Recebi o pagamento'];
+    this.statusColors = [['#3A2F0B', '#FFC107', '#FFC107'], ['#2E1F4F', '#C4B5FD', '#8B5CF6'], ['#0C2A44', '#60A5FA', '#3B82F6'], ['#0F2E1C', '#4ADE80', '#22C55E'], ['#27272A', '#A1A1AA', '#52525B']];
     this.templates = {
       especifico: [],
       geral: [['Troca de óleo do motor', 45, 20], ['Filtro de óleo', 25, 5], ['Filtro de ar', 40, 10], ['Vela de ignição', 30, 10], ['Limpeza e regulagem da corrente', 0, 30], ['Regulagem de freios', 0, 20], ['Check-up elétrico', 0, 30]],
@@ -808,22 +925,103 @@ class Component extends DCLogic {
     return 'green';
   }
 
-  advance(id) {
+  setStatus(id, novo) {
     const s = this.state;
     let used = 0;
     let stock = s.stock;
     const history = s.history.map((h) => {
       if (h.id !== id) return h;
-      const next = Math.min(2, h.status + 1);
-      if (next === 1) {
+      if (novo >= 2 && h.status < 2) {
         stock = stock.map((sk) => {
-          if (h.items.indexOf(sk.servico) !== -1 && sk.qty > 0) { used += 1; return Object.assign({}, sk, { qty: sk.qty - 1 }); }
+          if ((h.items || []).indexOf(sk.servico) !== -1 && sk.qty > 0) { used += 1; return Object.assign({}, sk, { qty: sk.qty - 1 }); }
           return sk;
         });
       }
-      return Object.assign({}, h, { status: next });
+      return Object.assign({}, h, { status: novo });
     });
-    this.setState({ history: history, stock: stock, flash: used ? 'Serviço iniciado. Baixa de ' + used + (used === 1 ? ' peça' : ' peças') + ' no estoque.' : '' });
+    const msgs = ['Voltou para aguardando aprovação.', 'Marcado como aprovado.', 'Serviço iniciado.', 'Marcado como pronto.', 'Pago! Foi para o histórico.'];
+    this.setState({ history: history, stock: stock, flash: msgs[novo] + (used ? ' Baixa de ' + used + (used === 1 ? ' peça' : ' peças') + ' no estoque.' : '') });
+  }
+
+  advance(id) {
+    const h = this.state.history.find((x) => x.id === id);
+    if (h) this.setStatus(id, Math.min(4, h.status + 1));
+  }
+
+  // dados antigos (3 etapas) para as 5 etapas novas, e lista de clientes a partir das ordens
+  migrar() {
+    const st = this.state;
+    if (st.history.some((h) => h.sv !== 2)) {
+      st.history = st.history.map((h) => {
+        if (h.sv === 2) return h;
+        let novo = h.status;
+        if (h.status === 1) novo = 2;
+        else if (h.status === 2) novo = h.entregue ? 4 : 3;
+        return Object.assign({}, h, { status: novo, sv: 2 });
+      });
+    }
+    if (!Array.isArray(st.clientes)) {
+      let lista = [];
+      st.history.slice().reverse().forEach((h) => { lista = this.acharOuCriarCliente(h, lista).lista; });
+      st.clientes = lista;
+      st.history = st.history.map((h) => (h.clienteId ? h : Object.assign({}, h, { clienteId: this.clienteDaOrdem(h, lista) })));
+    }
+  }
+
+  digitos(t) { return String(t || '').replace(/\D/g, ''); }
+  normNome(t) { return String(t || '').trim().toLowerCase(); }
+
+  clienteDaOrdem(h, lista) {
+    const tel = this.digitos(h.tel);
+    const nome = this.normNome(h.cliente);
+    const c = lista.find((x) => (tel && this.digitos(x.tel) === tel) || (nome && nome !== 'cliente sem nome' && this.normNome(x.nome) === nome));
+    return c ? c.id : null;
+  }
+
+  acharOuCriarCliente(h, lista) {
+    const semNome = !h.cliente || h.cliente === 'Cliente sem nome';
+    const tel = this.digitos(h.tel);
+    if (semNome && !tel) return { id: null, lista: lista };
+    const placa = h.placa && h.placa !== 'SEM PLACA' && h.placa.charAt(0) !== '[' ? h.placa : '';
+    const id = this.clienteDaOrdem(h, lista);
+    if (id) {
+      return { id: id, lista: lista.map((c) => (c.id !== id ? c : Object.assign({}, c, {
+        tel: c.tel || h.tel || '',
+        placas: placa && (c.placas || []).indexOf(placa) === -1 ? (c.placas || []).concat([placa]) : (c.placas || [])
+      }))) };
+    }
+    const novo = { id: 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), nome: semNome ? 'Cliente ' + h.tel : h.cliente, tel: h.tel || '', placas: placa ? [placa] : [] };
+    return { id: novo.id, lista: [novo].concat(lista) };
+  }
+
+  ordensDoCliente(c) {
+    return this.state.history.filter((h) => h.clienteId === c.id || (!h.clienteId && this.clienteDaOrdem(h, [c]) === c.id));
+  }
+
+  cartaoOS(h) {
+    const s = this.state;
+    const nomeCli = h.cliente && h.cliente.charAt(0) !== '[' && h.cliente !== 'Cliente sem nome' ? ', ' + h.cliente.split(/\s+/)[0] : '';
+    return {
+      num: h.num, placa: h.placa, cliente: h.cliente, moto: h.moto, rev: h.rev, data: h.data,
+      totalFmt: this.brl(h.total), status: this.statuses[h.status], statusStyle: this.pill(h.status),
+      telTxt: h.tel && String(h.tel).trim() ? 'WhatsApp: ' + h.tel : 'Sem WhatsApp cadastrado',
+      steps: this.statusMini.map((l, i) => ({
+        label: l, atual: i === h.status ? 'true' : 'false', aria: 'Mudar para ' + this.statuses[i],
+        pick: () => this.setStatus(h.id, i),
+        style: 'height: 34px; padding: 0 2px; border-radius: 8px; font-size: 10px; font-weight: 600; ' + (i === h.status ? 'background: ' + this.statusColors[i][2] + '; color: ' + (i === 0 || i === 3 ? '#18181B' : '#FFFFFF') + '; border: 0' : i < h.status ? 'background: #3F3F46; color: #CFCFCF; border: 0' : 'background: transparent; color: #A1A1AA; border: 1px solid #3F3F46')
+      })),
+      hasNext: h.status < 4, nextLabel: this.nextLabels[h.status] || '', advance: () => this.advance(h.id),
+      hasWa: h.status === 0 || h.status === 3,
+      waLabel: h.status === 0 ? 'Reenviar' : 'Avisar pronta',
+      wa: () => this.openWa(h.tel, h.status === 0 ? this.reenviarMsg(h) : 'Olá' + nomeCli + '! Sua ' + h.moto + ' está pronta para retirada' + (s.shop.nome.trim() ? ' na ' + s.shop.nome.trim() : '') + '. Total: ' + this.brl(h.total) + '. Qualquer dúvida, é só chamar.'),
+      reabrir: () => this.setStatus(h.id, 3),
+      editando: s.editOs === h.id, naoEditando: s.editOs !== h.id,
+      apagando: s.delOs === h.id, mostraAcoes: s.editOs !== h.id && s.delOs !== h.id,
+      pedirApagar: () => this.setState({ delOs: h.id, editOs: null }),
+      cancelarApagar: () => this.setState({ delOs: null }),
+      apagar: () => this.setState({ history: this.state.history.filter((x) => x.id !== h.id), delOs: null, flash: 'OS ' + h.num + ' apagada.' }),
+      editar: () => this.setState({ editOs: h.id, edCli: { cliente: h.cliente === 'Cliente sem nome' ? '' : h.cliente, tel: h.tel || '', placa: h.placa === 'SEM PLACA' ? '' : h.placa } })
+    };
   }
 
   openWa(phone, text) {
@@ -1028,6 +1226,7 @@ class Component extends DCLogic {
   go(screen) { return () => this.setState({ screen: screen, flash: '' }); }
 
   renderVals() {
+    this.migrar();
     const s = this.state;
     const brand = this.brands[s.brand];
     const model = this.model();
@@ -1099,19 +1298,29 @@ class Component extends DCLogic {
     const pb = normPlaca(s.placaBusca);
     const visitas = pb.length >= 7 ? s.history.filter((h) => normPlaca(h.placa) === pb) : [];
     const ultVisita = visitas[0];
+    const fichaCli = (s.clientes || []).find((c) => c.id === s.cliId) || null;
+    const ordemMenos = (a, b) => String(b.num).localeCompare(String(a.num));
+    const abertasTodas = s.history.filter((h) => h.status < 4).sort(ordemMenos);
+    const abertasVis = abertasTodas.filter((h) => s.osFilter === -1 || s.osFilter === undefined || h.status === s.osFilter);
+    const pagasTodas = s.history.filter((h) => h.status === 4);
+    const pagasVis = s.pagasTodas ? pagasTodas : pagasTodas.slice(0, 5);
+    const cb = String(s.cliBusca || '').trim().toLowerCase();
+    const cbDig = this.digitos(cb);
+    const clientesVis = (s.clientes || []).filter((c) => !cb || this.normNome(c.nome).indexOf(cb) !== -1 || (cbDig && this.digitos(c.tel).indexOf(cbDig) !== -1) || (c.placas || []).some((pl) => pl.toLowerCase().indexOf(cb.replace(/[^a-z0-9]/g, '')) !== -1)).sort((a, b) => a.nome.localeCompare(b.nome));
+    const iniciaisDe = (n) => String(n || '?').trim().split(/\s+/).map((x) => x.charAt(0)).join('').slice(0, 2).toUpperCase();
     const titles = {
       home: ['', ''], brand: ['Nova OS', 'Escolha a marca'], models: [brand.name, 'Escolha o modelo'],
       detail: [modelName, 'Escolha os serviços'], quote: ['Cliente e pagamento', modelName + ' · ' + revLabel], done: ['Orçamento pronto', 'Baixe o PDF ou envie no WhatsApp'],
-      os: ['Ordens de serviço', s.history.length + ' ordens'], stock: ['Estoque', shopNome],
+      os: ['Ordens', ''], clientes: ['Clientes', (s.clientes || []).length + ' contatos'], cliente: [fichaCli ? fichaCli.nome : 'Cliente', fichaCli ? fichaCli.tel || 'Sem WhatsApp' : ''], stock: ['Estoque', shopNome],
       settings: ['Ajustes', 'Oficina, preços e mecânico']
     };
-    const back = { brand: 'home', models: 'brand', detail: 'models', quote: 'detail' };
-    const navScreens = ['home', 'os', 'stock', 'settings'];
+    const back = { brand: 'home', models: 'home', detail: 'models', quote: 'detail', cliente: 'clientes' };
+    const navScreens = ['home', 'clientes', 'stock', 'settings'];
 
     return {
       isHome: s.screen === 'home', notHome: s.screen !== 'home',
       isBrand: s.screen === 'brand', isModels: s.screen === 'models', isDetail: s.screen === 'detail', isQuote: s.screen === 'quote', isDone: s.screen === 'done',
-      isOs: s.screen === 'os', isStock: s.screen === 'stock', isSettings: s.screen === 'settings',
+      isOs: false, isClientes: s.screen === 'clientes', isCliente: s.screen === 'cliente', isStock: s.screen === 'stock', isSettings: s.screen === 'settings',
       showNav: navScreens.indexOf(s.screen) !== -1,
       headerTitle: titles[s.screen][0], headerSub: titles[s.screen][1],
       showBack: s.screen !== 'home',
@@ -1172,10 +1381,10 @@ class Component extends DCLogic {
       shopNome: shopNome,
       saudacao: mecNome ? 'Olá, ' + mecNome.split(/\s+/)[0] + '!' : 'Olá!',
       hasFlash: !!s.flash, flash: s.flash,
-      navHome: this.go('home'), navOs: this.go('os'), navStock: this.go('stock'), navSet: this.go('settings'),
+      navHome: this.go('home'), navOs: this.go('home'), navCli: this.go('clientes'), navStock: this.go('stock'), navSet: this.go('settings'),
       navStockBaixo: () => this.setState({ screen: 'stock', stockLow: true, stockCat: 'Todas', flash: '' }),
-      navHomeStyle: this.nav(s.screen === 'home'), navOsStyle: this.nav(s.screen === 'os'), navStockStyle: this.nav(s.screen === 'stock'), navSetStyle: this.nav(s.screen === 'settings'),
-      novoOrc: () => this.setState({ screen: 'brand', flash: '', placaBusca: '', ano: null }),
+      navHomeStyle: this.nav(s.screen === 'home'), navCliStyle: this.nav(s.screen === 'clientes' || s.screen === 'cliente'), navStockStyle: this.nav(s.screen === 'stock'), navSetStyle: this.nav(s.screen === 'settings'),
+      novoOrc: () => this.setState({ screen: 'home', flash: '', placaBusca: '', ano: null }),
       filtroPend: () => this.setState({ screen: 'os', osFilter: 0, flash: '' }),
       filtroManut: () => this.setState({ screen: 'os', osFilter: 1, flash: '' }),
 
@@ -1212,7 +1421,7 @@ class Component extends DCLogic {
         info: 'OS ' + cur.num + ' · ' + (deckIdx + 1) + ' de ' + deck.length,
         moto: cur.moto, sub: cur.rev + ' · ' + cur.placa,
         foto: this.fotos[cur.modelId] || '', hasFoto: !!this.fotos[cur.modelId], noFoto: !this.fotos[cur.modelId],
-        detail: (cur.items.length ? cur.items.length + (cur.items.length === 1 ? ' item · ' : ' itens · ') : '') + cur.cliente,
+        detail: ((cur.items || []).length ? (cur.items || []).length + ((cur.items || []).length === 1 ? ' item · ' : ' itens · ') : '') + cur.cliente,
         totalFmt: this.brl(cur.total),
         isWaiting: cur.status === 0,
         reenviar: () => this.openWa(cur.tel, this.reenviarMsg(cur)),
@@ -1296,40 +1505,100 @@ class Component extends DCLogic {
           placa: (s.q.placa.trim() || 'SEM PLACA').toUpperCase(), cliente: s.q.cliente.trim() || 'Cliente sem nome',
           moto: brand.name + ' ' + modelName, modelId: s.modelId, brandKey: s.brand, ano: s.ano || null, rev: revLabel, data: hoje,
           hora: String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'),
-          mecanico: mec, status: 0, parts: parts * factor, labor: labor * factor, total: total,
+          mecanico: mec, status: 0, sv: 2, parts: parts * factor, labor: labor * factor, total: total,
           items: chosen.map((it) => it.name), fotos: 0, tel: s.q.tel, km: s.q.km, pag: payLine,
           itemsFull: chosen.map((it) => ({ name: it.name, part: this.num(it.part), labor: this.num(it.labor) }))
         };
         const linhas = chosen.map((it) => '• ' + it.name + ': ' + this.brl(this.num(it.part) + this.num(it.labor)));
         const msg = 'Olá' + (s.q.cliente.trim() ? ', ' + s.q.cliente.trim().split(/\s+/)[0] : '') + '! Segue o orçamento da sua ' + entry.moto + ' (' + revLabel + ')' + (s.shop.nome.trim() ? ' na ' + s.shop.nome.trim() : '') + ':\n\n' + linhas.join('\n') + '\n\n*Total: ' + this.brl(total) + '*\nPagamento: ' + payLine + '\n\nResponda *SIM* para aprovar.';
+        const cliRes = this.acharOuCriarCliente(entry, s.clientes || []);
+        entry.clienteId = cliRes.id;
         entry.link = this.linkAprovacao(entry);
         entry.msg = msg.replace('\n\nResponda *SIM* para aprovar.', '\n\nVeja os itens e aprove por aqui:\n' + entry.link);
         this.setState({
-          history: [entry].concat(s.history), osNum: n, screen: 'done', lastId: entry.id, pdfMsg: '', flash: '',
+          history: [entry].concat(s.history), clientes: cliRes.lista, osNum: n, screen: 'done', lastId: entry.id, pdfMsg: '', flash: '',
           q: { cliente: '', tel: '', placa: '', km: '', desconto: '0', pag: 'pix', parcelas: 1, validade: '' }, photos: []
         });
       },
 
-      busca: s.busca, setBusca: (e) => this.setState({ busca: e.target.value }),
-      osFilters: [[-1, 'Todas']].concat(this.statusShort.map((l, i) => [i, l])).map((f) => ({ label: f[1], selected: f[0] === s.osFilter ? 'true' : 'false', pick: () => this.setState({ osFilter: f[0] }), style: this.chip(f[0] === s.osFilter) })),
-      osEmpty: osList.length === 0,
-      osList: osList.map((h) => ({
-        num: h.num, placa: h.placa, cliente: h.cliente, moto: h.moto, rev: h.rev, data: h.data, mecanico: h.mecanico,
-        totalFmt: this.brl(h.total), status: this.statuses[h.status],
-        fotosTxt: h.fotos ? ' · ' + h.fotos + (h.fotos === 1 ? ' foto' : ' fotos') : '',
-        statusStyle: this.pill(h.status),
-        steps: this.statuses.map((x, i) => ({ style: 'flex: 1; height: 4px; border-radius: 2px; background: ' + (i <= h.status ? '#FFC107' : '#52525B') })),
-        canAdvance: true, hasNext: h.status < 2, nextLabel: this.nextLabels[h.status] || '', isReady: h.status === 2,
-        advance: () => this.advance(h.id),
-        telTxt: h.tel && String(h.tel).trim() ? 'WhatsApp: ' + h.tel : 'Sem WhatsApp cadastrado',
-        editando: s.editOs === h.id, naoEditando: s.editOs !== h.id,
-        apagando: s.delOs === h.id, mostraAcoes: s.editOs !== h.id && s.delOs !== h.id,
-        pedirApagar: () => this.setState({ delOs: h.id, editOs: null }),
-        cancelarApagar: () => this.setState({ delOs: null }),
-        apagar: () => this.setState({ history: this.state.history.filter((x) => x.id !== h.id), delOs: null, flash: 'OS ' + h.num + ' apagada.' }),
-        editar: () => this.setState({ editOs: h.id, edCli: { cliente: h.cliente === 'Cliente sem nome' ? '' : h.cliente, tel: h.tel || '', placa: h.placa === 'SEM PLACA' ? '' : h.placa } }),
-        avisar: () => this.openWa(h.tel, 'Olá' + (h.cliente && h.cliente.charAt(0) !== '[' && h.cliente !== 'Cliente sem nome' ? ', ' + h.cliente.split(/\s+/)[0] : '') + '! Sua ' + h.moto + ' está pronta para retirada' + (s.shop.nome.trim() ? ' na ' + s.shop.nome.trim() : '') + '. Total: ' + this.brl(h.total) + '. Qualquer dúvida, é só chamar.')
+      abertasTxt: abertasTodas.length + (abertasTodas.length === 1 ? ' ordem' : ' ordens'),
+      filtrosAbertas: [[-1, 'Todas']].concat([0, 1, 2, 3].map((i) => [i, this.statusShort[i]])).map((f) => ({
+        label: f[1] + ' · ' + abertasTodas.filter((h) => f[0] === -1 || h.status === f[0]).length,
+        selected: f[0] === s.osFilter ? 'true' : 'false',
+        pick: () => this.setState({ osFilter: f[0] }),
+        style: 'height: 34px; padding: 0 12px; border-radius: 17px; border: 0; font-size: 12px; white-space: nowrap; flex-shrink: 0; ' + (f[0] === s.osFilter ? 'background: #FFC107; color: #18181B; font-weight: 600' : 'background: #27272A; color: #FFFFFF')
       })),
+      semAbertas: abertasVis.length === 0,
+      abertas: abertasVis.map((h) => this.cartaoOS(h)),
+      pagasTxt: pagasTodas.length + (pagasTodas.length === 1 ? ' serviço' : ' serviços') + ' · ' + this.brl(pagasTodas.reduce((a, h) => a + h.total, 0)),
+      semPagas: pagasTodas.length === 0,
+      pagas: pagasVis.map((h) => this.cartaoOS(h)),
+      temMaisPagas: pagasTodas.length > 5,
+      verPagasTxt: s.pagasTodas ? 'Mostrar menos' : 'Ver todos (' + pagasTodas.length + ')',
+      verTodasPagas: () => this.setState({ pagasTodas: !s.pagasTodas }),
+
+      cliBusca: s.cliBusca || '', setCliBusca: (e) => this.setState({ cliBusca: e.target.value }),
+      clientesTxt: clientesVis.length + (clientesVis.length === 1 ? ' cliente' : ' clientes'),
+      semClientes: clientesVis.length === 0,
+      clientesLista: clientesVis.map((c) => {
+        const ords = this.ordensDoCliente(c);
+        const ab = ords.filter((h) => h.status < 4).length;
+        const pg = ords.filter((h) => h.status === 4).length;
+        return {
+          nome: c.nome, tel: c.tel || 'Sem WhatsApp', iniciais: iniciaisDe(c.nome),
+          resumo: (ab ? ab + ' em aberto' : 'Nada em aberto') + ' · ' + pg + (pg === 1 ? ' concluído' : ' concluídos'),
+          abertas: ab, temAbertas: ab > 0,
+          abrir: () => this.setState({ screen: 'cliente', cliId: c.id, cliEdit: false, cliDel: false })
+        };
+      }),
+      mostrandoNovoCli: !!s.novoCliAberto,
+      novoCli: s.novoCli || { nome: '', tel: '', placa: '' },
+      abrirNovoCli: () => this.setState({ novoCliAberto: true, novoCli: { nome: '', tel: '', placa: '' } }),
+      fecharNovoCli: () => this.setState({ novoCliAberto: false }),
+      ncNome: (e) => this.setState({ novoCli: Object.assign({}, this.state.novoCli, { nome: e.target.value }) }),
+      ncTel: (e) => this.setState({ novoCli: Object.assign({}, this.state.novoCli, { tel: e.target.value }) }),
+      ncPlaca: (e) => this.setState({ novoCli: Object.assign({}, this.state.novoCli, { placa: e.target.value.toUpperCase() }) }),
+      salvarNovoCli: () => {
+        const d = this.state.novoCli || {};
+        if (!String(d.nome || '').trim() && !this.digitos(d.tel)) { this.setState({ flash: 'Coloque pelo menos o nome ou o WhatsApp.' }); return; }
+        const r = this.acharOuCriarCliente({ cliente: String(d.nome || '').trim() || 'Cliente sem nome', tel: String(d.tel || '').trim(), placa: String(d.placa || '').trim() }, this.state.clientes || []);
+        this.setState({ clientes: r.lista, novoCliAberto: false, flash: 'Cliente salvo.' });
+      },
+
+      cliNaoEditando: !s.cliEdit, cliEditando: !!s.cliEdit, cliExcluindo: !!s.cliDel,
+      cliDraft: s.cliDraft || { nome: '', tel: '' },
+      cdNome: (e) => this.setState({ cliDraft: Object.assign({}, this.state.cliDraft, { nome: e.target.value }) }),
+      cdTel: (e) => this.setState({ cliDraft: Object.assign({}, this.state.cliDraft, { tel: e.target.value }) }),
+      cdCancelar: () => this.setState({ cliEdit: false }),
+      cdSalvar: () => {
+        const d = this.state.cliDraft || {};
+        const nome = String(d.nome || '').trim() || (fichaCli ? fichaCli.nome : '');
+        const tel = String(d.tel || '').trim();
+        const ids = fichaCli ? this.ordensDoCliente(fichaCli).map((h) => h.id) : [];
+        this.setState({
+          clientes: (this.state.clientes || []).map((c) => (c.id === s.cliId ? Object.assign({}, c, { nome: nome, tel: tel }) : c)),
+          history: this.state.history.map((h) => (ids.indexOf(h.id) !== -1 ? Object.assign({}, h, { cliente: nome, tel: tel, clienteId: s.cliId }) : h)),
+          cliEdit: false, flash: 'Contato atualizado.'
+        });
+      },
+      ficha: fichaCli ? (() => {
+        const ords = this.ordensDoCliente(fichaCli).sort(ordemMenos);
+        const ab = ords.filter((h) => h.status < 4);
+        const pg = ords.filter((h) => h.status === 4);
+        const linha = (h) => ({ num: h.num, moto: h.moto, data: h.data, rev: h.rev, totalFmt: this.brl(h.total), status: this.statusShort[h.status], statusStyle: this.pill(h.status) });
+        return {
+          nome: fichaCli.nome, tel: fichaCli.tel || 'Sem WhatsApp cadastrado', iniciais: iniciaisDe(fichaCli.nome),
+          placas: (fichaCli.placas || []).length ? 'Placas: ' + fichaCli.placas.join(', ') : 'Nenhuma placa cadastrada',
+          nAbertas: ab.length, semAbertas: ab.length === 0, abertas: ab.map(linha),
+          nPagas: pg.length, semPagas: pg.length === 0, pagas: pg.map(linha),
+          orcar: () => this.setState({ screen: 'home', q: Object.assign({}, this.state.q, { cliente: fichaCli.nome, tel: fichaCli.tel || '' }), placaBusca: (fichaCli.placas || [])[0] || '', flash: 'Novo orçamento para ' + fichaCli.nome + ': digite a placa ou escolha a marca.' }),
+          wa: () => this.openWa(fichaCli.tel, 'Olá, ' + String(fichaCli.nome).split(/\s+/)[0] + '!'),
+          editar: () => this.setState({ cliEdit: true, cliDel: false, cliDraft: { nome: fichaCli.nome, tel: fichaCli.tel || '' } }),
+          pedirExcluir: () => this.setState({ cliDel: true, cliEdit: false }),
+          cancelarExcluir: () => this.setState({ cliDel: false }),
+          excluir: () => this.setState({ clientes: (this.state.clientes || []).filter((c) => c.id !== fichaCli.id), history: this.state.history.map((h) => (h.clienteId === fichaCli.id ? Object.assign({}, h, { clienteId: 'removido' }) : h)), cliDel: false, screen: 'clientes', cliId: null, flash: 'Contato excluído.' })
+        };
+      })() : { abertas: [], pagas: [] },
 
       edCli: s.edCli || { cliente: '', tel: '', placa: '' },
       edNome: (e) => this.setState({ edCli: Object.assign({}, s.edCli, { cliente: e.target.value }) }),
@@ -1384,7 +1653,7 @@ class Component extends DCLogic {
     };
   }
 }
-DC.mount(Component, document.getElementById('tela'), document.getElementById('app'), { salvarEm: "minhaOficina", campos: ["history", "osNum", "stock", "shop", "mecanico", "fator", "edits", "names", "uid"] });
+DC.mount(Component, document.getElementById('tela'), document.getElementById('app'), { salvarEm: "minhaOficina", campos: ["history", "osNum", "stock", "shop", "mecanico", "fator", "edits", "names", "uid", "clientes"] });
 </script>
 <script>
 if ('serviceWorker' in navigator) {
