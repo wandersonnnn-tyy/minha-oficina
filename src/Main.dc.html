@@ -830,7 +830,7 @@ class Component extends DCLogic {
 
   reenviarMsg(h) {
     const shop = this.state.shop.nome.trim();
-    return 'Olá! Passando para lembrar do orçamento da sua ' + h.moto + ' (' + h.rev + ')' + (shop ? ' na ' + shop : '') + ': ' + this.brl(h.total) + '. Responda *SIM* para aprovar.';
+    return 'Olá! Passando para lembrar do orçamento da sua ' + h.moto + ' (' + h.rev + ')' + (shop ? ' na ' + shop : '') + ': ' + this.brl(h.total) + '.' + (h.link ? '\n\nVeja e aprove por aqui:\n' + h.link : ' Responda *SIM* para aprovar.');
   }
 
   loadLogo(e) {
@@ -977,6 +977,18 @@ class Component extends DCLogic {
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 60000);
     this.setState({ pdfMsg: 'PDF gerado: ' + filename });
+  }
+
+  linkAprovacao(h) {
+    const shop = this.state.shop;
+    const dados = {
+      v: 1, of: shop.nome.trim(), ot: shop.tel.trim(), oc: shop.cnpj.trim(),
+      n: h.num, m: h.moto, r: h.rev, p: h.placa === 'SEM PLACA' ? '' : h.placa,
+      c: h.cliente === 'Cliente sem nome' ? '' : h.cliente, pg: h.pag || '', d: h.data,
+      i: (h.itemsFull || []).map((it) => [it.name, Math.round(it.part * 100) / 100, Math.round(it.labor * 100) / 100])
+    };
+    const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(dados)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    return 'https://wandersonnnn-tyy.github.io/minha-oficina/aprovacao.html#d=' + b64;
   }
 
   setQ(field) { return (e) => this.setState({ q: Object.assign({}, this.state.q, { [field]: e.target.value }) }); }
@@ -1280,7 +1292,8 @@ class Component extends DCLogic {
         };
         const linhas = chosen.map((it) => '• ' + it.name + ': ' + this.brl(this.num(it.part) + this.num(it.labor)));
         const msg = 'Olá' + (s.q.cliente.trim() ? ', ' + s.q.cliente.trim().split(/\s+/)[0] : '') + '! Segue o orçamento da sua ' + entry.moto + ' (' + revLabel + ')' + (s.shop.nome.trim() ? ' na ' + s.shop.nome.trim() : '') + ':\n\n' + linhas.join('\n') + '\n\n*Total: ' + this.brl(total) + '*\nPagamento: ' + payLine + '\n\nResponda *SIM* para aprovar.';
-        entry.msg = msg;
+        entry.link = this.linkAprovacao(entry);
+        entry.msg = msg.replace('\n\nResponda *SIM* para aprovar.', '\n\nVeja os itens e aprove por aqui:\n' + entry.link);
         this.setState({
           history: [entry].concat(s.history), osNum: n, screen: 'done', lastId: entry.id, pdfMsg: '', flash: '',
           q: { cliente: '', tel: '', placa: '', km: '', desconto: '0', pag: 'pix', parcelas: 1, validade: '' }, photos: []
