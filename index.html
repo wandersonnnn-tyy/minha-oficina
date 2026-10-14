@@ -141,6 +141,32 @@ body { margin: 0; background: #18181B; }
     <!-- ESCOLHER MOTO -->
     <sc-if value="{{isBrand}}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 12px">
+        <section style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #27272A; border-radius: 16px">
+          <label for="buscaPlaca" style="font-weight: 600; font-size: 15px">Placa da moto</label>
+          <div style="display: flex; flex-direction: column; border-radius: 10px; overflow: hidden; border: 2px solid #3F3F46; background: #FFFFFF">
+            <span aria-hidden="true" style="height: 16px; background: #1D4ED8; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; letter-spacing: 0.2em">BRASIL</span>
+            <input id="buscaPlaca" type="text" autocomplete="off" autocapitalize="characters" maxlength="8" placeholder="ABC1D23" value="{{placaBusca}}" onChange="{{setPlacaBusca}}" class="dica-brilho" style="height: 54px; border: 0; background: transparent; color: #18181B; text-align: center; font-family: 'Roboto Mono', ui-monospace, monospace; font-weight: 700; font-size: 30px; letter-spacing: 0.12em; text-transform: uppercase; outline: none">
+          </div>
+          <span style="font-size: 12px; color: #A1A1AA">Se a moto já veio antes, o app preenche tudo sozinho.</span>
+
+          <sc-if value="{{placaAchada}}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #0F2E1C; border: 1.5px solid #22C55E; border-radius: 12px">
+              <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #4ADE80">MOTO JÁ ATENDIDA · {{placaInfo.visitas}}</span>
+              <span style="font-weight: 600; font-size: 16px">{{placaInfo.moto}}</span>
+              <span style="font-size: 13px; color: #CFCFCF">{{placaInfo.cliente}}</span>
+              <sc-for list="{{placaInfo.ultimas}}" as="u" hint-placeholder-count="2">
+                <div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: #A1A1AA">
+                  <span>{{u.data}} · {{u.rev}}</span><span style="color: #FFFFFF; white-space: nowrap">{{u.total}}</span>
+                </div>
+              </sc-for>
+              <button type="button" onClick="{{usarMoto}}" style="margin-top: 4px; height: 48px; border-radius: 12px; border: 0; background: #22C55E; color: #052E12; font-weight: 700; font-size: 15px">Usar esta moto e cliente</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{placaNova}}" hint-placeholder-val="{{ false }}">
+            <span style="font-size: 13px; color: #FFC107">Placa nova. Escolha a marca e o modelo abaixo; a placa já vai preenchida no orçamento.</span>
+          </sc-if>
+        </section>
+
         <p style="margin: 0; color: #CFCFCF">Qual a marca da moto?</p>
         <sc-for list="{{brands}}" as="b" hint-placeholder-count="2">
           <button type="button" onClick="{{b.pick}}" style="display: flex; align-items: center; gap: 16px; min-height: 116px; padding: 20px; background: #27272A; border: 1px solid #3F3F46; border-radius: 16px; color: #FFFFFF; text-align: left">
@@ -1057,6 +1083,10 @@ class Component extends DCLogic {
     }
     const hora = new Date().getHours();
     const prox = tarefas[0];
+    const normPlaca = (t) => String(t || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const pb = normPlaca(s.placaBusca);
+    const visitas = pb.length >= 7 ? s.history.filter((h) => normPlaca(h.placa) === pb) : [];
+    const ultVisita = visitas[0];
     const titles = {
       home: ['', ''], brand: ['Nova OS', 'Escolha a marca'], models: [brand.name, 'Escolha o modelo'],
       detail: [modelName, 'Escolha os serviços'], quote: ['Cliente e pagamento', modelName + ' · ' + revLabel], done: ['Orçamento pronto', 'Baixe o PDF ou envie no WhatsApp'],
@@ -1075,6 +1105,23 @@ class Component extends DCLogic {
       showBack: s.screen !== 'home',
       goBack: () => this.voltar(back),
       mecIniciais: iniciais,
+      placaBusca: s.placaBusca || '',
+      setPlacaBusca: (e) => { const v = e.target.value.toUpperCase(); this.setState({ placaBusca: v, q: Object.assign({}, this.state.q, { placa: v }) }); },
+      placaAchada: !!ultVisita, placaNova: pb.length >= 7 && !ultVisita,
+      placaInfo: ultVisita ? {
+        visitas: visitas.length + (visitas.length === 1 ? ' VISITA' : ' VISITAS'),
+        moto: ultVisita.moto,
+        cliente: ultVisita.cliente + (ultVisita.tel ? ' · ' + ultVisita.tel : ''),
+        ultimas: visitas.slice(0, 3).map((h) => ({ data: h.data, rev: h.rev, total: this.brl(h.total) }))
+      } : { ultimas: [] },
+      usarMoto: () => {
+        const h = ultVisita;
+        if (!h) return;
+        const marca = h.brandKey || Object.keys(this.brands).find((k) => this.brands[k].models.some((m) => m[0] === h.modelId));
+        const q = Object.assign({}, this.state.q, { cliente: h.cliente === 'Cliente sem nome' ? '' : h.cliente, tel: h.tel || '', placa: h.placa === 'SEM PLACA' ? '' : h.placa });
+        if (marca && h.modelId) this.setState({ brand: marca, modelId: h.modelId, ano: h.ano || null, rev: 'geral', screen: 'detail', q: q, flash: '' });
+        else this.setState({ q: q, flash: 'Cliente preenchido. Agora escolha a moto.' });
+      },
       saudacaoHora: (hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite') + (mecNome ? ', ' + mecNome.split(/\s+/)[0] : ''),
       tarefasTxt: tarefas.length ? tarefas.length + (tarefas.length === 1 ? ' coisa para fazer hoje' : ' coisas para fazer hoje') : 'Tudo em dia por aqui',
       proximo: prox ? {
@@ -1116,7 +1163,7 @@ class Component extends DCLogic {
       navHome: this.go('home'), navOs: this.go('os'), navStock: this.go('stock'), navSet: this.go('settings'),
       navStockBaixo: () => this.setState({ screen: 'stock', stockLow: true, stockCat: 'Todas', flash: '' }),
       navHomeStyle: this.nav(s.screen === 'home'), navOsStyle: this.nav(s.screen === 'os'), navStockStyle: this.nav(s.screen === 'stock'), navSetStyle: this.nav(s.screen === 'settings'),
-      novoOrc: () => this.setState({ screen: 'brand', flash: '' }),
+      novoOrc: () => this.setState({ screen: 'brand', flash: '', placaBusca: '', ano: null }),
       filtroPend: () => this.setState({ screen: 'os', osFilter: 0, flash: '' }),
       filtroManut: () => this.setState({ screen: 'os', osFilter: 1, flash: '' }),
 
@@ -1235,7 +1282,7 @@ class Component extends DCLogic {
         const entry = {
           id: 'os' + n, num: String(n).padStart(4, '0'),
           placa: (s.q.placa.trim() || 'SEM PLACA').toUpperCase(), cliente: s.q.cliente.trim() || 'Cliente sem nome',
-          moto: brand.name + ' ' + modelName, modelId: s.modelId, rev: revLabel, data: hoje,
+          moto: brand.name + ' ' + modelName, modelId: s.modelId, brandKey: s.brand, ano: s.ano || null, rev: revLabel, data: hoje,
           hora: String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'),
           mecanico: mec, status: 0, parts: parts * factor, labor: labor * factor, total: total,
           items: chosen.map((it) => it.name), fotos: 0, tel: s.q.tel, km: s.q.km, pag: payLine,
