@@ -697,19 +697,21 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
         </sc-if>
 
         <sc-for list="{{stock}}" as="sk" hint-placeholder-count="5">
-          <div style="display: flex; gap: 12px; padding: 12px; background: #27272A; border: 1px solid #3F3F46; border-radius: 14px">
+          <div style="{{sk.cardStyle}}">
+            <div style="display: flex; gap: 12px">
             <div style="width: 56px; height: 56px; border-radius: 12px; background: #3F3F46; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #FFC107">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"></path></svg>
             </div>
             <div style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0">
               <div style="display: flex; align-items: flex-start; gap: 6px">
                 <span style="display: flex; flex-direction: column; flex: 1; min-width: 0">
-                  <input type="text" value="{{sk.name}}" onChange="{{sk.setName}}" aria-label="Nome da peça" style="width: 100%; box-sizing: border-box; height: 24px; padding: 0; background: transparent; border: 0; color: #FFFFFF; font-size: 14px; font-weight: 600">
+                  <span style="{{sk.nameStyle}}">{{sk.nameShow}}</span>
                   <span style="font-size: 12px; color: #A1A1AA">{{sk.cat}} · Em estoque: <span style="color: #FFFFFF; font-weight: 600">{{sk.qty}} un.</span></span>
                 </span>
                 <sc-if value="{{sk.isRed}}" hint-placeholder-val="{{ false }}">
                   <span style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: #3B1414; color: #F87171; white-space: nowrap">Repor</span>
                 </sc-if>
+                <button type="button" onClick="{{sk.toggleEdit}}" aria-label="Editar peça" aria-expanded="{{sk.editAria}}" style="{{sk.editBtnStyle}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path></svg></button>
               </div>
               <div style="height: 6px; border-radius: 3px; background: #3F3F46; overflow: hidden" aria-hidden="true"><span style="{{sk.barStyle}}"></span></div>
               <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px; font-size: 11px; color: #A1A1AA">
@@ -732,6 +734,34 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
                 </span>
               </div>
             </div>
+            </div>
+            <sc-if value="{{sk.editando}}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 12px; margin-top: 12px; border-top: 1px solid #3F3F46">
+                <label style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: #A1A1AA">
+                  Nome da peça
+                  <input type="text" value="{{sk.name}}" onChange="{{sk.setName}}" placeholder="Ex.: Pneu traseiro 90/90-18" style="height: 46px; box-sizing: border-box; padding: 0 12px; background: #18181B; border: 1.5px solid #FFC107; border-radius: 10px; color: #FFFFFF; font-size: 15px; outline: none">
+                </label>
+                <span style="font-size: 12px; color: #A1A1AA">Categoria</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px">
+                  <sc-for list="{{sk.catOpts}}" as="co" hint-placeholder-count="9">
+                    <button type="button" aria-pressed="{{co.selected}}" onClick="{{co.pick}}" style="{{co.style}}">{{co.label}}</button>
+                  </sc-for>
+                </div>
+                <sc-if value="{{sk.confirmando}}" hint-placeholder-val="{{ false }}">
+                  <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #3B1414; border-radius: 10px">
+                    <span style="font-size: 13px; color: #FFFFFF">Apagar "{{sk.nameShow}}" do estoque?</span>
+                    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+                      <button type="button" onClick="{{sk.cancelDel}}" style="height: 42px; border-radius: 10px; border: 1px solid #52525B; background: transparent; color: #FFFFFF; font-size: 13px">Cancelar</button>
+                      <button type="button" onClick="{{sk.del}}" style="height: 42px; border-radius: 10px; border: 0; background: #EF4444; color: #FFFFFF; font-weight: 700; font-size: 13px">Sim, apagar</button>
+                    </div>
+                  </div>
+                </sc-if>
+                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+                  <button type="button" onClick="{{sk.askDel}}" style="height: 44px; border-radius: 10px; border: 1px solid #7F1D1D; background: transparent; color: #F87171; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"></path></svg>Apagar peça</button>
+                  <button type="button" onClick="{{sk.toggleEdit}}" style="height: 44px; border-radius: 10px; border: 0; background: #FFC107; color: #18181B; font-weight: 700; font-size: 13px">Pronto</button>
+                </div>
+              </div>
+            </sc-if>
           </div>
         </sc-for>
         <span style="font-size: 11px; color: #8A8A8A; text-align: center">Quantidades e custos de exemplo. A baixa é automática quando um serviço começa.</span>
@@ -845,7 +875,7 @@ class Component extends DCLogic {
       ],
       pagasTodas: false, osBusca: '', ocultos: [], filtroAberto: false, cliBusca: '', cliId: null, novoCliAberto: false, novoCli: { nome: '', tel: '', placa: '' }, cliEdit: false, cliDel: false, cliDraft: { nome: '', tel: '' },
       osNum: 3, osFilter: -1, deckIdx: 0, deckFilter: -1, busca: '', flash: '',
-      stockBusca: '', stockCat: 'Todas', stockLow: false,
+      stockBusca: '', stockCat: 'Todas', stockLow: false, stockEdit: null, stockDel: null,
       stock: [
         { id: 's1', name: 'Filtro de óleo', cat: 'Filtros', servico: 'Filtro de óleo', qty: 12, min: '5', custo: '18' },
         { id: 's2', name: 'Pastilha de freio dianteira', cat: 'Freios', servico: 'Pastilha de freio dianteira', qty: 3, min: '4', custo: '35' },
@@ -874,6 +904,7 @@ class Component extends DCLogic {
     this.fotos = { mt03: '/_blob/b72fad0aeff32e1a5cc5544fe7acb02e', nmax160: '/_blob/3c6a58f7401bb8ad26030e7acc547ebf', pcx160: '/_blob/8fe5c733e1179cc59b2667cdfc67248d', xmax250: '/_blob/a2f409746ba9bcea9774d52fe75dca2e' };
     this.revs = [['geral', 'Geral', 'Revisão geral'], ['motor', 'Motor', 'Serviço de motor'], ['dianteira', 'Dianteira', 'Revisão dianteira'], ['traseira', 'Traseira', 'Revisão traseira'], ['especifico', 'Específico', 'Serviço específico']];
     this.sugestoes = [['Pneu dianteiro', 180, 30], ['Pneu traseiro', 220, 30], ['Kit relação', 180, 50], ['Kit embreagem', 120, 80], ['Bateria', 180, 10], ['Cabo de embreagem', 30, 25], ['Lâmpada do farol', 25, 10], ['Limpeza de bicos injetores', 0, 90], ['Retífica de disco de freio', 0, 70]];
+    this.stockCats = ['Óleos', 'Filtros', 'Freios', 'Ignição', 'Transmissão', 'Pneus', 'Elétrica', 'Motor', 'Outros'];
     this.payOpts = [['pix', 'Pix'], ['dinheiro', 'Dinheiro'], ['debito', 'Débito'], ['credito', 'Crédito']];
     this.statuses = ['Aguardando aprovação', 'Aprovado', 'Em serviço', 'Pronta', 'Pago'];
     this.statusShort = ['Aguardando', 'Aprovado', 'Em serviço', 'Pronta', 'Pago'];
@@ -1695,7 +1726,18 @@ class Component extends DCLogic {
         const color = { green: '#22C55E', yellow: '#FFC107', red: '#EF4444' }[lv];
         const pill = { green: ['#0F2E1C', '#4ADE80', 'Estoque OK'], yellow: ['#3A2F0B', '#FFC107', 'Estoque baixo'], red: ['#3B1414', '#F87171', sk.qty === 0 ? 'Sem estoque' : 'Crítico'] }[lv];
         return {
-          name: sk.name, cat: sk.cat, qty: sk.qty, min: sk.min, custo: sk.custo, isRed: lv === 'red',
+          name: sk.name, nameShow: sk.name && sk.name.trim() ? sk.name : 'Sem nome (toque no lápis)',
+          nameStyle: 'font-size: 14px; font-weight: 600; line-height: 22px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ' + (sk.name && sk.name.trim() ? 'color: #FFFFFF' : 'color: #FFC107; font-style: italic'),
+          editando: s.stockEdit === sk.id, editAria: s.stockEdit === sk.id ? 'true' : 'false',
+          editBtnStyle: 'width: 34px; height: 34px; flex-shrink: 0; border: 0; border-radius: 10px; display: flex; align-items: center; justify-content: center; ' + (s.stockEdit === sk.id ? 'background: #FFC107; color: #18181B' : 'background: #3F3F46; color: #FFFFFF'),
+          cardStyle: 'display: flex; flex-direction: column; padding: 12px; background: #27272A; border-radius: 14px; ' + (s.stockEdit === sk.id ? 'border: 1.5px solid #FFC107' : 'border: 1px solid #3F3F46'),
+          toggleEdit: () => this.setState({ stockEdit: this.state.stockEdit === sk.id ? null : sk.id, stockDel: null }),
+          catOpts: this.stockCats.map((c) => ({ label: c, selected: c === sk.cat ? 'true' : 'false', style: this.chip(c === sk.cat), pick: () => this.patchStock(sk.id, { cat: c }) })),
+          confirmando: s.stockDel === sk.id,
+          askDel: () => this.setState({ stockDel: sk.id }),
+          cancelDel: () => this.setState({ stockDel: null }),
+          del: () => this.setState({ stock: this.state.stock.filter((x) => x.id !== sk.id), stockDel: null, stockEdit: null }),
+          cat: sk.cat, qty: sk.qty, min: sk.min, custo: sk.custo, isRed: lv === 'red',
           levelLabel: pill[2],
           pillStyle: 'font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px; white-space: nowrap; background: ' + pill[0] + '; color: ' + pill[1],
           barStyle: 'display: block; height: 100%; border-radius: 3px; background: ' + color + '; width: ' + Math.max(sk.qty > 0 ? 4 : 0, Math.round(sk.qty / max * 100)) + '%',
@@ -1706,7 +1748,7 @@ class Component extends DCLogic {
           dec: () => this.patchStock(sk.id, { qty: Math.max(0, sk.qty - 1) })
         };
       }),
-      addStock: () => { const uid = s.uid + 1; this.setState({ uid: uid, stockCat: 'Todas', stockLow: false, stockBusca: '', stock: [{ id: 'sn' + uid, name: 'Nova peça', cat: 'Outros', servico: 'Nova peça', qty: 0, min: '1', custo: '' }].concat(s.stock) }); },
+      addStock: () => { const uid = s.uid + 1; this.setState({ uid: uid, stockCat: 'Todas', stockLow: false, stockBusca: '', stockEdit: 'sn' + uid, stockDel: null, stock: [{ id: 'sn' + uid, name: '', cat: 'Outros', servico: '', qty: 0, min: '1', custo: '' }].concat(s.stock) }); },
 
       shop: s.shop,
       setShopNome: this.setShop('nome'), setShopTel: this.setShop('tel'), setShopCnpj: this.setShop('cnpj'), setShopEnd: this.setShop('end'),
