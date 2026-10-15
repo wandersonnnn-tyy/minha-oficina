@@ -322,8 +322,8 @@ body { margin: 0; background: #18181B; }
         </div>
 
         <div class="dica-brilho" style="height: 48px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 8px; background: #27272A; border-radius: 24px; color: #FFFFFF; font-weight: 600; font-size: 15px; letter-spacing: 0.04em">Revisão<svg class="dica-seta" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></div>
-        <div role="tablist" aria-label="Tipo de revisão" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 4px; background: #27272A; border-radius: 24px">
-          <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+        <div role="tablist" aria-label="Tipo de revisão" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2px; padding: 4px; background: #27272A; border-radius: 24px">
+          <sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
             <button type="button" role="tab" aria-selected="{{t.selected}}" class="{{t.cls}}" onClick="{{t.pick}}" style="{{t.style}}">{{t.label}}</button>
           </sc-for>
         </div>
@@ -882,7 +882,7 @@ class Component extends DCLogic {
     };
     // fotos dos modelos (url da imagem enviada; vazio = desenho)
     this.fotos = { mt03: 'img/mt03.jpg', nmax160: 'img/nmax.jpg', pcx160: 'img/pcx.jpg', xmax250: 'img/xmax.jpg' };
-    this.revs = [['geral', 'Geral', 'Revisão geral'], ['dianteira', 'Dianteira', 'Revisão dianteira'], ['traseira', 'Traseira', 'Revisão traseira'], ['especifico', 'Específico', 'Serviço específico']];
+    this.revs = [['geral', 'Geral', 'Revisão geral'], ['motor', 'Motor', 'Serviço de motor'], ['dianteira', 'Dianteira', 'Revisão dianteira'], ['traseira', 'Traseira', 'Revisão traseira'], ['especifico', 'Específico', 'Serviço específico']];
     this.sugestoes = [['Pneu dianteiro', 180, 30], ['Pneu traseiro', 220, 30], ['Kit relação', 180, 50], ['Kit embreagem', 120, 80], ['Bateria', 180, 10], ['Cabo de embreagem', 30, 25], ['Lâmpada do farol', 25, 10], ['Limpeza de bicos injetores', 0, 90], ['Retífica de disco de freio', 0, 70]];
     this.payOpts = [['pix', 'Pix'], ['dinheiro', 'Dinheiro'], ['debito', 'Débito'], ['credito', 'Crédito']];
     this.statuses = ['Aguardando aprovação', 'Aprovado', 'Em serviço', 'Pronta', 'Pago'];
@@ -893,6 +893,7 @@ class Component extends DCLogic {
     this.templates = {
       especifico: [],
       geral: [['Troca de óleo do motor', 45, 20], ['Filtro de óleo', 25, 5], ['Filtro de ar', 40, 10], ['Vela de ignição', 30, 10], ['Limpeza e regulagem da corrente', 0, 30], ['Regulagem de freios', 0, 20], ['Check-up elétrico', 0, 30]],
+      motor: [['Jogo de juntas do motor', 70, 0], ['Kit pistão e anéis', 160, 0], ['Corrente de comando e tensor', 90, 0], ['Regulagem de válvulas', 0, 60], ['Limpeza do corpo de injeção / carburador', 0, 70], ['Troca de óleo do motor', 45, 20], ['Abrir, revisar e montar o motor', 0, 250]],
       dianteira: [['Pastilha de freio dianteira', 60, 30], ['Óleo da suspensão', 50, 40], ['Retentores da bengala', 70, 60], ['Rolamentos da roda dianteira', 60, 40]],
       traseira: [['Lona/pastilha de freio traseira', 50, 30], ['Kit relação', 180, 50], ['Rolamentos da roda traseira', 60, 40], ['Borracha do cubo (coxim)', 40, 20]],
       km1000: [['Troca de óleo do motor', 45, 20], ['Limpeza da tela do filtro', 0, 15], ['Regulagem da corrente', 0, 20], ['Revisão de apertos', 0, 30]],
@@ -1248,7 +1249,7 @@ class Component extends DCLogic {
     return 'height: 40px; border-radius: 20px; font-weight: 500; font-size: 13px; padding: 0 16px; white-space: nowrap; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; gap: 6px; ' + (sel ? 'background: #FFC107; color: #27272A; border: 1px solid #FFC107' : 'background: #27272A; color: #FFFFFF; border: 1px solid #52525B');
   }
   seg(sel) {
-    return 'height: 40px; border: 0; border-radius: 20px; font-weight: 500; font-size: 13px; padding: 0 2px; ' + (sel ? 'background: #FFC107; color: #27272A' : 'background: transparent; color: #CFCFCF');
+    return 'height: 40px; border: 0; border-radius: 20px; font-weight: 500; font-size: 12px; padding: 0 1px; white-space: nowrap; overflow: hidden; ' + (sel ? 'background: #FFC107; color: #27272A' : 'background: transparent; color: #CFCFCF');
   }
   nav(sel) {
     return 'height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: transparent; border: 0; font-size: 11px; border-radius: 10px; padding: 0; ' + (sel ? 'color: #FFC107; font-weight: 600' : 'color: #A1A1AA; font-weight: 400');

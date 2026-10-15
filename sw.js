@@ -1,5 +1,5 @@
 // Guarda o app no celular para abrir sem internet.
-const VERSAO = 'minha-oficina-v7';
+const VERSAO = 'minha-oficina-v8';
 const ARQUIVOS = [
   './', './index.html', './login.html', './aprovacao.html',
   './dc-runtime.js', './manifest.webmanifest',
